@@ -1,0 +1,36 @@
+\begin{center}
+\begin{tabular}{lclc}
+\toprule
+\textbf{Dep. Variable:}       & logit\_share\_USD & \textbf{  R-squared:         } &     0.742   \\
+\textbf{Model:}               &        OLS        & \textbf{  Adj. R-squared:    } &     0.730   \\
+\textbf{Method:}              &   Least Squares   & \textbf{  F-statistic:       } &     35.47   \\
+\textbf{Date:}                &  Thu, 06 Nov 2025 & \textbf{  Prob (F-statistic):} &  9.13e-18   \\
+\textbf{Time:}                &      00:38:52     & \textbf{  Log-Likelihood:    } &   -92.262   \\
+\textbf{No. Observations:}    &           95      & \textbf{  AIC:               } &     194.5   \\
+\textbf{Df Residuals:}        &           90      & \textbf{  BIC:               } &     207.3   \\
+\textbf{Df Model:}            &            4      & \textbf{                     } &             \\
+\textbf{Covariance Type:}     &        HAC        & \textbf{                     } &             \\
+\bottomrule
+\end{tabular}
+\begin{tabular}{lcccccc}
+                              & \textbf{coef} & \textbf{std err} & \textbf{z} & \textbf{P$> |$z$|$} & \textbf{[0.025} & \textbf{0.975]}  \\
+\midrule
+\textbf{const}                &       1.6480  &        1.826     &     0.903  &         0.367        &       -1.930    &        5.226     \\
+\textbf{dlog\_S\_nonUSD\_hat} &      -2.2268  &        1.814     &    -1.228  &         0.220        &       -5.782    &        1.328     \\
+\textbf{z\_DXY}               &      -0.0053  &        0.116     &    -0.046  &         0.963        &       -0.233    &        0.222     \\
+\textbf{z\_VIX}               &      -0.2656  &        0.099     &    -2.685  &         0.007        &       -0.459    &       -0.072     \\
+\textbf{log\_DEX}             &       0.1647  &        0.070     &     2.352  &         0.019        &        0.027    &        0.302     \\
+\bottomrule
+\end{tabular}
+\begin{tabular}{lclc}
+\textbf{Omnibus:}       & 43.340 & \textbf{  Durbin-Watson:     } &    0.957  \\
+\textbf{Prob(Omnibus):} &  0.000 & \textbf{  Jarque-Bera (JB):  } &  321.096  \\
+\textbf{Skew:}          &  1.143 & \textbf{  Prob(JB):          } & 1.88e-70  \\
+\textbf{Kurtosis:}      & 11.712 & \textbf{  Cond. No.          } &     822.  \\
+\bottomrule
+\end{tabular}
+%\caption{OLS Regression Results}
+\end{center}
+
+Notes: \newline
+ [1] Standard Errors are heteroscedasticity and autocorrelation robust (HAC) using 6 lags and without small sample correction

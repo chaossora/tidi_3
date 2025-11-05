@@ -1,0 +1,307 @@
+id,name,symbol,pegType,pegMechanism,gecko_id,chains
+133,NARS,NARS,peggedARS,fiat-backed,num-ars,Polygon
+165,AUDD,AUDD,peggedAUD,fiat-backed,novatti-australian-digital-dollar,"Stellar,Ethereum,Solana"
+145,CAD Coin,CADC,peggedCAD,fiat-backed,cad-coin,"Ethereum,Base,Polygon,Arbitrum"
+200,Hedera Swiss Franc,HCHF,peggedCHF,crypto-backed,hedera-swiss-franc,Hedera
+157,VNX Swiss Franc,VCHF,peggedCHF,fiat-backed,vnx-swiss-franc,"Solana,Avalanche,Base,Ethereum,Stellar,Celo,Polygon,Arbitrum,Tezos,Fraxtal,Q"
+226,Frankencoin,ZCHF,peggedCHF,crypto-backed,frankencoin,"Ethereum,Base,Gnosis,Polygon,OP Mainnet,Arbitrum,Avalanche,Sonic"
+280,Tether CNH,CNHT,peggedCNY,fiat-backed,cnh-tether,"Tron,Ethereum"
+127,Alternity CNY,LCNY,peggedCNY,crypto-backed,,Ethereum
+147,Anchored Coins AEUR,AEUR,peggedEUR,fiat-backed,anchored-coins-eur,"Ethereum,BSC"
+52,Celo Euro,CEUR,peggedEUR,algorithmic,celo-euro,"Celo,Solana,Polygon,Ethereum"
+55,EURA,EURA,peggedEUR,crypto-backed,ageur,"Ethereum,Arbitrum,Polygon,OP Mainnet,Fantom,Solana,Fuse,Aurora,zkSync Lite"
+319,AllUnity EUR,EURAU,peggedEUR,fiat-backed,allunity-eur,"Ethereum,Base,OP Mainnet,Polygon"
+50,EURC,EURC,peggedEUR,fiat-backed,euro-coin,"Ethereum,Base,Solana,Avalanche,Stellar,Sonic,Polygon,Cardano,ICP"
+254,EUR CoinVertible,EURCV,peggedEUR,fiat-backed,societe-generale-forge-eurcv,"Ethereum,Solana"
+161,Quantoz EURD,EURD,peggedEUR,fiat-backed,quantoz-eurd,Algorand
+101,Monerium EUR emoney,EURE,peggedEUR,fiat-backed,monerium-eur-money,"Gnosis,Ethereum,Polygon,Arbitrum,Linea,Noble,Algorand,Scroll"
+170,EURO3,EURO3,peggedEUR,crypto-backed,,"Linea,Polygon"
+247,Schuman EUROP,EUROP,peggedEUR,fiat-backed,schuman-europ,"Ethereum,Polygon"
+98,EUROe Stablecoin,EUROe,peggedEUR,fiat-backed,,"Solana,Polygon,Ethereum,Arbitrum,Avalanche,OP Mainnet,Concordium"
+274,Quantoz EURQ,EURQ,peggedEUR,fiat-backed,quantoz-eurq,Algorand
+239,StablR Euro,EURR,peggedEUR,fiat-backed,stablr-euro,"Ethereum,Solana"
+51,Stasis Euro,EURS,peggedEUR,fiat-backed,stasis-eurs,"Ethereum,Polygon,Stellar,Algorand,Gnosis,Everscale"
+49,Euro Tether,EURT,peggedEUR,fiat-backed,tether-eurt,"Ethereum,Polygon"
+91,Iron Bank EURO,IBEUR,peggedEUR,crypto-backed,iron-bank-euro,Ethereum
+56,Parallel,PAR,peggedEUR,crypto-backed,par-stablecoin,"Ethereum,Polygon,Fantom"
+53,sEUR,SEUR,peggedEUR,crypto-backed,seur,"Ethereum,OP Mainnet"
+158,VNX EURO,VEUR,peggedEUR,fiat-backed,vnx-euro,"Solana,Avalanche,Stellar,Base,Ethereum,Celo,Polygon,Arbitrum,Tezos,Fraxtal,Q"
+139,ARYZE eEUR,eEUR,peggedEUR,fiat-backed,aryze-eeur,"Polygon,BSC,Ethereum"
+292,VNX British Pound,VGBP,peggedGBP,fiat-backed,vnx-british-pound,"Base,Solana,Celo,Ethereum"
+140,ARYZE eGBP,eGBP,peggedGBP,fiat-backed,aryze-egbp,"Polygon,BSC,Ethereum"
+317,Tokenised GBP,tGBP,peggedGBP,fiat-backed,,"Ethereum,Base,Avalanche,BSC,Polygon,Solana"
+179,CJPY,CJPY,peggedJPY,crypto-backed,convertible-jpy-token,Ethereum
+122,GYEN,GYEN,peggedJPY,fiat-backed,gyen,"Ethereum,Stellar,Solana,Arbitrum,OP Mainnet"
+281,Mexican Peso Tether,MXNT,peggedMXN,fiat-backed,mexican-peso-tether,Ethereum
+299,PHT Stablecoin,PHT,peggedPHP,crypto-backed,pht-stablecoin,"Ethereum,Tron,Polygon"
+249,Brazilian Digital,BRZ,peggedREAL,fiat-backed,brz,"Solana,Polygon,Ethereum,BSC,Base,Gnosis,Avalanche,Celo,OP Mainnet,Moonbeam,Arbitrum,Mantle,Rootstock,Tron"
+199,Celo Real,CREAL,peggedREAL,crypto-backed,celo-real-creal,Celo
+258,A7A5,A7A5,peggedRUB,fiat-backed,a7a5,"Tron,Ethereum"
+289,XSGD,XSGD,peggedSGD,fiat-backed,xsgd,"Ethereum,Polygon,Avalanche,Zilliqa,Arbitrum,Hedera,XRPL"
+300,Bilira,TRYB,peggedTRY,fiat-backed,bilira,"Ethereum,Base,Polygon,Avalanche,BSC,Solana"
+131,UAHT,UAHT,peggedUAH,fiat-backed,,Polygon
+58,3USD,3USD,peggedUSD,crypto-backed,,Karura
+20,Alchemix USD,ALUSD,peggedUSD,algorithmic,alchemix-usd,"Ethereum,OP Mainnet,Arbitrum,Fantom"
+102,Offshift anonUSD,ANONUSD,peggedUSD,algorithmic,,Ethereum
+82,arUSD,ARUSD,peggedUSD,crypto-backed,,Avalanche
+205,Agora Dollar,AUSD,peggedUSD,fiat-backed,agora-dollar,"Solana,Ethereum,Avalanche,Sui,Polygon,Immutable zkEVM,Mantle,Arbitrum,Plume Mainnet,BSC,Core,Katana"
+48,BAI Stablecoin,BAI,peggedUSD,crypto-backed,bai-stablecoin,Astar
+94,BaoUSD,BAOUSD,peggedUSD,crypto-backed,,Ethereum
+67,Bean,BEAN,peggedUSD,algorithmic,bean,Ethereum
+293,Sigma Money bnbUSD,BNBUSD,peggedUSD,crypto-backed,sigma-bnb-usd,BSC
+204,Balanced Dollars,BNUSD,peggedUSD,crypto-backed,balanced-dollars,"Icon,Avalanche,Base,Arbitrum,Injective,BSC,OP Mainnet,Archway,Havah"
+84,BOB,BOB,peggedUSD,crypto-backed,bob,"Polygon,Ethereum,Arbitrum,BSC,OP Mainnet"
+227,Legacy BOLD,BOLD,peggedUSD,crypto-backed,,"Ethereum,OP Mainnet,Base,Arbitrum,Avalanche,Scroll"
+269,Liquity BOLD,BOLD,peggedUSD,crypto-backed,liquity-bold,"Ethereum,Base,OP Mainnet,Hyperliquid L1,Scroll,Arbitrum,Avalanche"
+180,Bread,BREAD,peggedUSD,crypto-backed,bread-3,Gnosis
+154,Bucket Protocol BUCK Stablecoin,BUCK,peggedUSD,crypto-backed,bucket-protocol-buck-stablecoin,Sui
+173,BlackRock USD,BUIDL,peggedUSD,fiat-backed,blackrock-usd-institutional-digital-liquidity-fund,"Ethereum,Aptos,Avalanche,Polygon,Arbitrum,OP Mainnet"
+4,Binance USD,BUSD,peggedUSD,fiat-backed,binance-usd,"Ethereum,IoTeX,Avalanche,Solana,Osmosis,EthereumClassic,Loopring,Near,ThunderCore,ZKsync Era,Metis,Moonriver,Harmony,Meter,BSC,Astar,Oasis,Shiden,Fantom,OKExChain,Evmos,Milkomeda C1,Terra Classic,KCC,Rootstock,Moonbeam,Elastos,Boba,Aurora,Theta,Polygon,Syscoin,Kaia"
+153,Binance Peg BUSD,BUSD,peggedUSD,crypto-backed,binance-peg-busd,"BSC,Avalanche,Meter,Polygon,Moonriver,Moonbeam,ZKsync Era,Fantom,Astar,OKExChain,ThunderCore,Boba,KCC,Solana,OP Mainnet,Aurora,Shiden,Theta,Rootstock,Elastos,Evmos,Syscoin,Metis,Oasis,Milkomeda C1,Terra Classic,Kaia"
+183,Bitcoin USD,BtcUSD,peggedUSD,crypto-backed,bitcoin-usd-btcfi,"Bifrost Network,Base"
+99,Stabl.fi Cash,CASH,peggedUSD,crypto-backed,stabl-fi,Polygon
+134,Phase Dollar,CASH,peggedUSD,fiat-backed,phase-dollar,Base
+206,Opus CASH,CASH,peggedUSD,crypto-backed,opus-cash,StarkNet
+316,CASH,CASH,peggedUSD,fiat-backed,cash-4,Solana
+24,Celo Dollar,CUSD,peggedUSD,algorithmic,celo-dollar,"Celo,Ethereum,Solana,Kaia"
+96,Coin98 Dollar,CUSD,peggedUSD,crypto-backed,coin98-dollar,"BSC,Solana,Ethereum"
+296,Cap cUSD,CUSD,peggedUSD,crypto-backed,cap-usd,Ethereum
+107,Czodiac USD,CZUSD,peggedUSD,crypto-backed,,BSC
+308,Saga Dollar,D,peggedUSD,crypto-backed,,Saga
+5,Dai,DAI,peggedUSD,crypto-backed,dai,"Ethereum,Polygon,Gnosis,BSC,Fantom,Arbitrum,PulseChain,OP Mainnet,Avalanche,Kava,zkSync Lite,Moonriver,Solana,StarkNet,Aztec,Astar,ZKsync Era,Metis,Linea,Boba,Osmosis,Loopring,Scroll,Arbitrum Nova,Mixin,Rootstock,Aurora,Moonbeam,Unichain,Cardano,KCC,Syscoin,Velas,Shiden,MultiversX,ThunderCore,Evmos,Taiko,SXnetwork,Oasis,EDU Chain,Harmony,Milkomeda C1,Terra Classic,Near,Everscale,Kaia,Morph,Hemi"
+111,DAI+,DAI+,peggedUSD,crypto-backed,overnight-dai,"Base,Arbitrum,OP Mainnet"
+208,Dackie USD,DCKUSD,peggedUSD,algorithmic,,Base
+210,Elixir deUSD,DEUSD,peggedUSD,crypto-backed,elixir-deusd,"Ethereum,Avalanche,Polygon,Sei"
+93,Djed StableCoin,DJED,peggedUSD,algorithmic,djed,Cardano
+160,Sovryn Dollar,DLLR,peggedUSD,crypto-backed,sovryn-dollar,Rootstock
+30,Dollar on Chain,DOC,peggedUSD,crypto-backed,,"Rootstock,Ethereum"
+15,Dola,DOLA,peggedUSD,crypto-backed,dola-usd,"Ethereum,Arbitrum,BSC,Base,Fantom,OP Mainnet,Avalanche,Polygon"
+100,Digital Standard Unit,DSU,peggedUSD,crypto-backed,,"Arbitrum,Ethereum,OP Mainnet"
+70,DigitalDollar,DUSD,peggedUSD,fiat-backed,,Arbitrum
+104,Davos Protocol,DUSD,peggedUSD,crypto-backed,davos-protocol,"Polygon,Ethereum,BSC,Arbitrum,OP Mainnet"
+252,StandX DUSD,DUSD,peggedUSD,crypto-backed,standx-dusd,"BSC,Solana"
+207,Dyad,DYAD,peggedUSD,crypto-backed,dyad,Ethereum
+288,EBUSD,EBUSD,peggedUSD,crypto-backed,ebusd-stablecoin,"Ethereum,Plasma"
+117,Ethos Reserve Note,ERN,peggedUSD,crypto-backed,ethos-reserve-note,OP Mainnet
+106,Electronic USD,EUSD,peggedUSD,crypto-backed,electronic-usd,"Base,Ethereum,Arbitrum"
+109,eUSD,EUSD,peggedUSD,crypto-backed,eusd-27a558b0-8b5b-4225-a614-63539da936f4,Ethereum
+119,First Digital USD,FDUSD,peggedUSD,fiat-backed,first-digital-usd,"Ethereum,Solana,Sui,BSC,Arbitrum,TON"
+9,Fei USD,FEI,peggedUSD,algorithmic,fei-usd,Ethereum
+251,Felix feUSD,FEUSD,peggedUSD,crypto-backed,felix-feusd,Hyperliquid L1
+61,Fixed Income Asset Token,FIAT,peggedUSD,crypto-backed,,Ethereum
+21,flexUSD,FLEXUSD,peggedUSD,crypto-backed,,"Ethereum,smartBCH"
+6,Frax,FRAX,peggedUSD,algorithmic,frax,"Ethereum,Harmony,Moonriver,Arbitrum,BSC,Avalanche,OP Mainnet,Moonbeam,Fantom,Polygon,Boba,Evmos,Aurora,zkSync Lite,ZKsync Era,Osmosis,Solana,Dogechain,Milkomeda C1,Near,Everscale,Fraxtal"
+235,Frax USD,FRXUSD,peggedUSD,fiat-backed,frax-usd,"Ethereum,Base,Sonic,Solana,Linea,BSC,Unichain,Arbitrum,OP Mainnet,Ink,X Layer,Avalanche,Plume Mainnet,Movement,Mode,Polygon,Polygon zkEVM,Blast,Fraxtal,Sei,Katana"
+63,Fantom USD,FUSD,peggedUSD,crypto-backed,,Fantom
+176,Fathom Dollar,FXD,peggedUSD,crypto-backed,fathom-dollar,XDC
+169,GAI Stablecoin,GAI,peggedUSD,crypto-backed,,Manta
+285,Good Game US Dollar,GGUSD,peggedUSD,crypto-backed,good-game-us-dollar,"Polygon,BSC,Solana"
+118,GHO,GHO,peggedUSD,crypto-backed,gho,Ethereum
+116,GRAI,GRAI,peggedUSD,crypto-backed,grai,"Ethereum,Arbitrum,Linea,ZKsync Era,Mantle,OP Mainnet,Polygon zkEVM"
+19,Gemini Dollar,GUSD,peggedUSD,fiat-backed,gemini-dollar,"Ethereum,Wanchain"
+306,Gate USD,GUSD,peggedUSD,fiat-backed,gusd,Ethereum
+185,Gyroscope GYD,GYD,peggedUSD,crypto-backed,gyroscope-gyd,"Ethereum,Polygon"
+171,Lets Get HAI,HAI,peggedUSD,crypto-backed,let-s-get-hai,OP Mainnet
+201,HEX Dollar Coin,HEXDC,peggedUSD,crypto-backed,hex-dollar-coin,PulseChain
+312,Hydrated Dollar,HOLLAR,peggedUSD,crypto-backed,hydrated-dollar,Hydradx
+60,HomeCoin,HOME,peggedUSD,crypto-backed,,Ethereum
+231,Honey,HONEY,peggedUSD,crypto-backed,honey-3,Berachain
+17,HUSD,HUSD,peggedUSD,fiat-backed,husd,"Ethereum,Tron,Solana,Elastos,Heco"
+142,HYDT,HYDT,peggedUSD,algorithmic,hydt-protocol-hydt,BSC
+144,High Yield USD,HYUSD,peggedUSD,algorithmic,,"Base,Ethereum"
+302,Hylo HYUSD,HYUSD,peggedUSD,crypto-backed,hylo-usd,Solana
+311,iAUSD,IAUSD,peggedUSD,crypto-backed,,Solana
+135,Inter Stable Token,IST,peggedUSD,crypto-backed,inter-stable-token,"Agoric,Osmosis"
+88,iUSD,IUSD,peggedUSD,crypto-backed,iusd,Cardano
+298,infiniFi USD,IUSD,peggedUSD,crypto-backed,infinifi-usd,Ethereum
+301,Jigsaw USD,JUSD,peggedUSD,crypto-backed,jigsaw-usd,Ethereum
+187,KNOX Dollar,KNOX,peggedUSD,crypto-backed,knox-dollar,Arbitrum
+72,Kolibri USD,KUSD,peggedUSD,crypto-backed,kolibri-usd,Tezos
+79,Lista USD,LISUSD,peggedUSD,crypto-backed,helio-protocol-hay,BSC
+8,Liquity USD,LUSD,peggedUSD,crypto-backed,liquity-usd,"Ethereum,OP Mainnet,Arbitrum,Scroll,Polygon,BSC,Fantom,Avalanche,Polygon zkEVM,ZKsync Era"
+229,Level USD,LVLUSD,peggedUSD,crypto-backed,level-usd,Ethereum
+213,M by M0,M,peggedUSD,fiat-backed,m-2,"Arbitrum,Ethereum,Noble,Solana,Hyperliquid L1,Plume Mainnet,OP Mainnet"
+267,Mead,MEAD,peggedUSD,crypto-backed,mead-2,Berachain
+10,Magic Internet Money,MIM,peggedUSD,crypto-backed,magic-internet-money,"Ethereum,Arbitrum,Avalanche,Kava,Fantom,Blast,Moonriver,BSC,OP Mainnet,Polygon,Base,Linea,Berachain,Nibiru"
+284,MNEE USD,MNEE,peggedUSD,fiat-backed,mnee-usd-stablecoin,Ethereum
+212,Move Dollar,MOD,peggedUSD,crypto-backed,move-dollar,Aptos
+74,Moremoney USD,MONEY,peggedUSD,crypto-backed,moremoney-usd,Avalanche
+259,Arche Protocol MSD,MSD,peggedUSD,crypto-backed,,Movement
+297,Main Street USD,MSUSD,peggedUSD,crypto-backed,main-street-usd,Sonic
+26,mStable USD,MUSD,peggedUSD,crypto-backed,musd,"Ethereum,Polygon,Gnosis"
+303,Mezo USD,MUSD,peggedUSD,crypto-backed,mezo-usd,"Ethereum,Mezo"
+313,Metamask USD,MUSD,peggedUSD,crypto-backed,metamask-usd,"Linea,Ethereum"
+148,Mynth MyUSD,MyUSD,peggedUSD,algorithmic,,Cardano
+128,Nexus,NEX,peggedUSD,algorithmic,,"Ethereum,Arbitrum"
+78,Note,NOTE,peggedUSD,crypto-backed,,Canto
+18,Nexus USD,NUSD,peggedUSD,crypto-backed,,"Ethereum,Arbitrum,Aurora,BSC,Avalanche,Boba,Polygon,OP Mainnet,Metis,Cronos,Fantom,Harmony,DFK"
+103,NXUSD,NXUSD,peggedUSD,crypto-backed,nxusd,"Avalanche,Polygon"
+23,Origin Dollar,OUSD,peggedUSD,crypto-backed,origin-dollar,Ethereum
+16,Parrot USD,PAI,peggedUSD,crypto-backed,parrot-usd,Solana
+222,Parallel USD,PAUSD,peggedUSD,crypto-backed,,"Ethereum,Polygon"
+92,Meme Dollar,PINA,peggedUSD,algorithmic,,Ethereum
+232,Pinto,PINTO,peggedUSD,crypto-backed,pinto,Base
+62,PUSd,PUSD,peggedUSD,crypto-backed,,Ethereum
+314,Palm USD,PUSD,peggedUSD,fiat-backed,,Ethereum
+175,PXDC Stablecoin,PXDC,peggedUSD,crypto-backed,powercity-pxdc,PulseChain
+120,PayPal USD,PYUSD,peggedUSD,fiat-backed,paypal-usd,"Ethereum,Solana,Flow,Plume Mainnet,Cardano,Berachain"
+115,R,R,peggedUSD,crypto-backed,,"Ethereum,Base"
+256,Resupply USD,REUSD,peggedUSD,crypto-backed,resupply-usd,Ethereum
+250,Ripple USD,RLUSD,peggedUSD,fiat-backed,ripple-usd,"Ethereum,XRPL"
+25,Reserve,RSV,peggedUSD,crypto-backed,,"Ethereum,Gnosis"
+90,Redeemable USD,RUSD,peggedUSD,fiat-backed,,Cardano
+150,USD Stable Colb,SCB,peggedUSD,fiat-backed,,Polygon
+238,Rings scUSD,SCUSD,peggedUSD,crypto-backed,rings-scusd,Sonic
+59,SigmaUSD,SIGUSD,peggedUSD,algorithmic,,Ergo
+123,STAR,STAR,peggedUSD,crypto-backed,preon-star,"Base,Polygon,Arbitrum"
+38,STBL,STBL,peggedUSD,crypto-backed,algostable,Algorand
+22,sUSD,SUSD,peggedUSD,crypto-backed,nusd,"Ethereum,OP Mainnet,Arbitrum,Fantom,Ontology"
+130,Savvy USD,SVUSD,peggedUSD,fiat-backed,,Arbitrum
+257,OpenEden TBILL,TBILL,peggedUSD,fiat-backed,openeden-tbill,"Ethereum,XRPL,Arbitrum,Solana"
+211,Threshold USD,THUSD,peggedUSD,crypto-backed,threshold-usd,Ethereum
+29,TOR,TOR,peggedUSD,crypto-backed,tor,Fantom
+7,TrueUSD,TUSD,peggedUSD,fiat-backed,true-usd,"Ethereum,Tron,Avalanche,BSC,Fantom,Polygon,Arbitrum,Syscoin,Near,Heco"
+163,PrismaLRT Ultra,ULTRA,peggedUSD,crypto-backed,,Ethereum
+177,UNO,UNO,peggedUSD,fiat-backed,nostra-uno,StarkNet
+253,USBD,USBD,peggedUSD,crypto-backed,usbd,"Ethereum,Plume Mainnet,Sonic,BSC,Goat,Hemi,Core"
+188,Orby USC,USC,peggedUSD,crypto-backed,orby-network-usc-stablecoin,Cronos
+193,Chi USC,USC,peggedUSD,crypto-backed,,Ethereum
+196,Classic USD,USC,peggedUSD,fiat-backed,classic-usd,"EthereumClassic,Polygon"
+46,USD+,USD+,peggedUSD,crypto-backed,usd,"Base,Blast,Arbitrum,Polygon,OP Mainnet,BSC,ZKsync Era,Linea,Avalanche"
+195,Usual USD,USD0,peggedUSD,fiat-backed,usual-usd,"Ethereum,Arbitrum"
+262,World Liberty Financial USD,USD1,peggedUSD,fiat-backed,usd1-wlfi,"BSC,Ethereum,Solana,Aptos,Tron"
+178,Web 3 Dollar,USD3,peggedUSD,crypto-backed,web-3-dollar,"Ethereum,Base"
+192,USDA,USDA,peggedUSD,crypto-backed,angle-usd,Ethereum
+220,Avalon USDa,USDA,peggedUSD,crypto-backed,usda-2,"Ethereum,Movement,BSC,Taiko,Sonic,Bitlayer,Base,ZKsync Era,Mantle,Zircuit,Kaia,Berachain,Morph,Sei,Corn,Bob,Nibiru"
+245,Anzens USDA,USDA,peggedUSD,fiat-backed,anzens-usda,Cardano
+294,Autonomint,USDA+,peggedUSD,crypto-backed,,"Base,OP Mainnet"
+34,USD Balance,USDB,peggedUSD,algorithmic,,Fantom
+172,USDB Blast,USDB,peggedUSD,crypto-backed,usdb,Blast
+2,USD Coin,USDC,peggedUSD,fiat-backed,usd-coin,"Ethereum,Solana,Hyperliquid L1,Base,Arbitrum,Polygon,BSC,Avalanche,Sui,OP Mainnet,Stellar,Polkadot,Noble,Sonic,Fantom,Aptos,Cronos,StarkNet,Hedera,Near,Unichain,Linea,ZKsync Era,Algorand,Celo,Tron,Osmosis,Mantle,World Chain,Soneium,XDC,Scroll,Gnosis,Plume Mainnet,PulseChain,Flow,MultiversX,XRPL,X Layer,Kava,Metis,Movement,Canto,zkSync Lite,Moonriver,IoTeX,Cardano,Immutable zkEVM,Aurora,Mixin,Moonbeam,Manta,Astar,KCC,Polygon zkEVM,Loopring,ICP,Boba,Injective,Mode,Wanchain,DFK,Taiko,Ink,Meter,Telos,Arbitrum Nova,Dogechain,OKExChain,Elastos,ThunderCore,EDU Chain,Syscoin,Fuse,Kardia,Rootstock,SXnetwork,Glue,Bitlayer,Oasis,Karura,Evmos,Waves,Theta,EthereumClassic,Crab,Viction,Nero,Ronin,REINetwork,Milkomeda C1,DefiChain,Kadena,Terra Classic,Everscale,Bsquared,Corn,Bob,Wemix,Core,Apechain,Zkfair,Kaia,Morph,Lisk,Berachain,Shape,Katana,Goat,Zircuit,Story,Abstract,Sei,Superposition,Kroma,Nibiru,Hemi,Flare,Perennial,Xai"
+164,USDCB,USDCB,peggedUSD,fiat-backed,,Rootstock
+307,USD CoinVertible,USDCV,peggedUSD,fiat-backed,usd-coinvertible,"Solana,Ethereum"
+14,USDD,USDD,peggedUSD,crypto-backed,usdd,"Tron,Ethereum,Bittorrent,BSC"
+264,XBANKING USDE,USDE,peggedUSD,crypto-backed,xbanking-usde,Solana
+219,Astherus,USDF,peggedUSD,crypto-backed,astherus-usdf,BSC
+248,USDFC,USDFC,peggedUSD,crypto-backed,usdfc,Filecoin
+286,Global Dollar,USDG,peggedUSD,fiat-backed,global-dollar,"Solana,Ethereum,Ink"
+155,Glo Dollar,USDGLO,peggedUSD,fiat-backed,glo-dollar,"Celo,Ethereum,OP Mainnet,Stellar,VeChain,Arbitrum,Base,Polygon"
+65,USDH,USDH,peggedUSD,crypto-backed,usdh,Solana
+242,Hermetica USDh,USDH,peggedUSD,fiat-backed,hermetica-usdh,Stacks
+76,Interest Protocol,USDI,peggedUSD,crypto-backed,,Ethereum
+87,USDi,USDI,peggedUSD,crypto-backed,,Ethereum
+37,USDJ,USDJ,peggedUSD,crypto-backed,just-stablecoin,Tron
+27,USDK,USDK,peggedUSD,fiat-backed,,"Ethereum,OKExChain,Polygon,Solana"
+265,Orki USD,USDK,peggedUSD,crypto-backed,,Swellchain
+68,USDLemma,USDL,peggedUSD,algorithmic,,"Arbitrum,OP Mainnet"
+152,Liquid Loans USDL,USDL,peggedUSD,crypto-backed,liquid-loans-usdl,PulseChain
+244,Lift Dollar,USDL,peggedUSD,fiat-backed,lift-dollar,"Ethereum,Arbitrum"
+132,USDM,USDM,peggedUSD,fiat-backed,mountain-protocol-usdm,"Ethereum,Arbitrum,ZKsync Era,Base,OP Mainnet,Polygon"
+215,Moneta,USDM,peggedUSD,fiat-backed,,Cardano
+12,Neutrino USD,USDN,peggedUSD,algorithmic,neutrino,"Waves,Ethereum,BSC,Polygon"
+277,SMARDEX USDN,USDN,peggedUSD,crypto-backed,smardex-usdn,Ethereum
+282,Noble Dollar,USDN,peggedUSD,fiat-backed,noble-dollar-usdn,Noble
+241,OpenDollar USDO,USDO,peggedUSD,fiat-backed,openeden-open-dollar,"Ethereum,BSC,Base,Plasma"
+11,Pax Dollar,USDP,peggedUSD,fiat-backed,paxos-standard,"Ethereum,BSC,Linea"
+33,USDP Stablecoin,USDP,peggedUSD,crypto-backed,,"Ethereum,Gnosis,BSC,Fantom"
+228,Quill USD,USDQ,peggedUSD,crypto-backed,quill-usdq,Scroll
+275,Quantoz USDQ,USDQ,peggedUSD,fiat-backed,quantoz-usdq,Algorand
+85,Real USD,USDR,peggedUSD,algorithmic,real-usd,"Polygon,re.al"
+240,StablR USD,USDR,peggedUSD,fiat-backed,stablr-usd,Ethereum
+159,RIF US Dollar,USDRIF,peggedUSD,crypto-backed,rif-us-dollar,Rootstock
+31,SpiceUSD,USDS,peggedUSD,algorithmic,,"Avalanche,BSC,Polygon,Ethereum"
+32,Sperax USD,USDS,peggedUSD,crypto-backed,sperax-usd,Arbitrum
+149,Sable Coin,USDS,peggedUSD,crypto-backed,,"BSC,Base"
+209,Sky Dollar,USDS,peggedUSD,crypto-backed,usds,"Ethereum,Base,OP Mainnet,Unichain,Arbitrum,Solana"
+233,TheStandard USD,USDS,peggedUSD,crypto-backed,thestandard-usd,Arbitrum
+1,Tether,USDT,peggedUSD,fiat-backed,tether,"Ethereum,Tron,BSC,Solana,Arbitrum,Polygon,Avalanche,TON,Aptos,Mantle,OP Mainnet,Hyperliquid L1,Ink,Celo,Kava,Fantom,Omni,Near,Sui,Tezos,Unichain,Polkadot,Mixin,Injective,Linea,Metis,OKExChain,KCC,Scroll,PulseChain,StarkNet,NEO,Manta,Zilliqa,Gnosis,ZKsync Era,Movement,ICP,zkSync Lite,Rootstock,Stacks,EOS,Aurora,IoTeX,Osmosis,Soneium,MultiversX,Algorand,Moonriver,Cardano,Wanchain,ThunderCore,Loopring,Mode,Astar,Kardia,Canto,Oasis,Bittorrent,EDU Chain,Kusama,Statemine,Moonbeam,Waves,Telos,Viction,Meter,Taiko,Boba,Plume Mainnet,Fuse,Immutable zkEVM,Syscoin,Dogechain,EthereumClassic,Shiden,Evmos,REINetwork,Crab,Theta,SXnetwork,Arbitrum Nova,Milkomeda C1,DefiChain,Ontology,Harmony,Heco,Terra Classic,Everscale,Corn,Core,Kaia,Morph,Berachain,Katana,Zircuit,Plasma,Sei,Hemi,Flare"
+112,USDT+,USDT+,peggedUSD,crypto-backed,usdtplus,"Arbitrum,BSC,Linea"
+221,Ethena USDtb,USDTB,peggedUSD,fiat-backed,usdtb,Ethereum
+73,USDtez,USDTZ,peggedUSD,fiat-backed,usdtez,Tezos
+283,Unitas,USDU,peggedUSD,crypto-backed,usdu,Solana
+304,USDU Finance,USDU,peggedUSD,crypto-backed,usdu,Ethereum
+143,Verified USD,USDV,peggedUSD,fiat-backed,verified-usd-foundation-usdv,"Ethereum,BSC,Arbitrum,Avalanche,OP Mainnet,Polygon,Viction"
+261,Solomon USDv,USDV,peggedUSD,crypto-backed,solomon-usdv,Solana
+83,USDW,USDW,peggedUSD,crypto-backed,,EthereumPoW
+42,USDX,USDX,peggedUSD,crypto-backed,usdx,Kava
+214,USDX Money USDX,USDX,peggedUSD,crypto-backed,usdx-money-usdx,"BSC,Arbitrum,Ethereum"
+263,Hex Trust USDX,USDX,peggedUSD,fiat-backed,hex-trust-usdx,"Songbird,Ethereum,Flare"
+129,Ondo US Dollar Yield,USDY,peggedUSD,fiat-backed,ondo-us-dollar-yield,"Ethereum,Solana,Mantle,Sui,Noble,Osmosis,Arbitrum,Aptos,Stellar,Injective,Penumbra,Mantra"
+273,Asymmetry USDaf,USDaf,peggedUSD,crypto-backed,asymmetry-usdaf,Ethereum
+295,Asymmetry USDaf V2,USDaf,peggedUSD,crypto-backed,asymmetry-usdaf-2,Ethereum
+309,USD.AI,USDai,peggedUSD,crypto-backed,usdai,"Arbitrum,Ethereum,Plasma"
+146,Ethena USDe,USDe,peggedUSD,crypto-backed,ethena-usde,"Ethereum,BSC,TON,Mantle,Hyperliquid L1,Solana,Base,Arbitrum,Blast,Movement,Scroll,OP Mainnet,Linea,ZKsync Era,Manta,Mode,Metis,Kava,X Layer,Zircuit,Plasma,Berachain,Fraxtal"
+246,Falcon USD,USDf,peggedUSD,crypto-backed,falcon-finance,"Ethereum,BSC"
+291,Parallel USDp,USDp,peggedUSD,crypto-backed,,"Avalanche,Sonic,Base,Hyperliquid L1,Ethereum,Arbitrum,OP Mainnet,BSC,Polygon,Scroll,Gnosis,Ink,Unichain,Berachain,Sei,Tac"
+202,Anzen USDz,USDz,peggedUSD,fiat-backed,anzen-usdz,"Base,Ethereum,Manta,Blast"
+57,Hedge USD,USH,peggedUSD,crypto-backed,hedge-usd,Solana
+276,Hyperstable USD,USH,peggedUSD,crypto-backed,hyperstable,Hyperliquid L1
+81,USK,USK,peggedUSD,crypto-backed,usk,"Kujira,Osmosis"
+54,USN,USN,peggedUSD,algorithmic,,"Near,Aurora"
+230,Noon USN,USN,peggedUSD,crypto-backed,noon-usn,"Ethereum,Sophon,ZKsync Era"
+287,Nerite USND,USND,peggedUSD,crypto-backed,us-nerite-dollar,Arbitrum
+97,USP Stablecoin,USP,peggedUSD,crypto-backed,,Avalanche
+315,US Permissionless Dollar,USPD,peggedUSD,crypto-backed,us-permissionless-dollar,"Ethereum,Base,BSC,OP Mainnet,Polygon,Arbitrum"
+197,Resolv USD,USR,peggedUSD,crypto-backed,resolv-usr,"Ethereum,Base,Hyperliquid L1,BSC,Soneium,Berachain"
+3,TerraClassicUSD,USTC,peggedUSD,algorithmic,terrausd,"OP Mainnet,Metis,Terra Classic,DFK,Moonbeam,Osmosis,BSC,Ethereum,Aurora,Oasis,Polygon,Solana,Celo,Arbitrum,Fuse,Fantom,Avalanche"
+44,dForce USD,USX,peggedUSD,crypto-backed,token-dforce-usd,"Arbitrum,OP Mainnet,Ethereum,Base,BSC,Polygon,Conflux,Avalanche,Kava"
+310,Solstice USX,USX,peggedUSD,crypto-backed,usx,Solana
+237,Circle USYC,USYC,peggedUSD,fiat-backed,hashnote-usyc,"BSC,Ethereum"
+305,XSY UTY,UTY,peggedUSD,crypto-backed,unity-2,Avalanche
+75,Youves uUSD,UUSD,peggedUSD,crypto-backed,youves-uusd,Tezos
+64,UXD Stablecoin,UXD,peggedUSD,algorithmic,uxd-stablecoin,Solana
+28,Vai,VAI,peggedUSD,crypto-backed,vai,BSC
+71,Vesta Stable,VST,peggedUSD,crypto-backed,,Arbitrum
+260,VDollar Finance,VUSD,peggedUSD,crypto-backed,,"Ethereum,Base,Hemi"
+184,Magma Wen,WEN,peggedUSD,crypto-backed,,IoTeX
+278,WEUSD,WEUSD,peggedUSD,crypto-backed,weusd,"BSC,Movement,Arbitrum,Base"
+234,Worldwide USD,WUSD,peggedUSD,fiat-backed,worldwide-usd,"Ethereum,Polygon"
+89,XAI,XAI,peggedUSD,crypto-backed,,Ethereum
+162,XUSD,XUSD,peggedUSD,crypto-backed,xusd-babelfish,Rootstock
+290,StraitsX XUSD,XUSD,peggedUSD,fiat-backed,straitsx-xusd,"BSC,Ethereum"
+223,TREN Debt Token,XY,peggedUSD,crypto-backed,,Arbitrum
+272,YLDS,YLDS,peggedUSD,fiat-backed,ylds,Provenance
+268,YU,YU,peggedUSD,crypto-backed,yu,"Ethereum,Solana,Base,BSC"
+13,YUSD Stablecoin,YUSD,peggedUSD,crypto-backed,yusd-stablecoin,Avalanche
+255,Aegis YUSD,YUSD,peggedUSD,fiat-backed,aegis-yusd,"Ethereum,BSC"
+43,ZUSD,ZUSD,peggedUSD,fiat-backed,,"Stellar,Solana,Ethereum,OP Mainnet,Arbitrum"
+225,Zoth ZeUSD,ZeUSD,peggedUSD,fiat-backed,,"Ethereum,Manta,Metis,Avalanche"
+45,aUSD Seed,aSEED,peggedUSD,crypto-backed,ausd-seed-karura,"Karura,Acala"
+198,Stable Jack aUSD,aUSD,peggedUSD,crypto-backed,,Avalanche
+271,Avant USD,avUSD,peggedUSD,fiat-backed,avant-usd,Avalanche
+191,bitSmiley USD,bitUSD,peggedUSD,crypto-backed,,Bitlayer
+189,btcUSD,btcUSD,peggedUSD,crypto-backed,,Ethereum
+203,Chad USD,cUSD,peggedUSD,crypto-backed,,Scroll
+166,Cygnus Finance Global USD,cgUSD,peggedUSD,fiat-backed,cygnus-finance-global-usd,Base
+114,CLever USD,clevUSD,peggedUSD,crypto-backed,,Ethereum
+110,crvUSD,crvUSD,peggedUSD,crypto-backed,crvusd,"Ethereum,Arbitrum,OP Mainnet,Base,Taiko,Polygon,Sonic,Gnosis,ZKsync Era,BSC,Waves,Fraxtal"
+243,Coinshift,csUSDL,peggedUSD,crypto-backed,coinshift-usdl-morpho-vault,Ethereum
+108,Deuterium,d2O,peggedUSD,crypto-backed,,"Moonbeam,Ethereum"
+224,dTRINITY USD,dUSD,peggedUSD,crypto-backed,dtrinity-usd,"Sonic,Ronin,Katana,Fraxtal"
+138,ARYZE eUSD,eUSD,peggedUSD,fiat-backed,aryze-eusd,"Polygon,BSC,Ethereum"
+125,eUSD (V2),eUSD(v2),peggedUSD,crypto-backed,eusd-new,Ethereum
+168,fxUSD,fxUSD,peggedUSD,crypto-backed,f-x-protocol-usd,Ethereum
+318,litUSD,litUSD,peggedUSD,fiat-backed,,Ethereum
+126,mkUSD,mkUSD,peggedUSD,crypto-backed,prisma-mkusd,Ethereum
+266,Plume USD,pUSD,peggedUSD,crypto-backed,plume-usd,Plume Mainnet
+279,Parabol USD,paraUSD,peggedUSD,fiat-backed,parabol-usd,Base
+124,peg-eUSD,peUSD,peggedUSD,crypto-backed,,"Ethereum,Arbitrum"
+174,rUSD,rUSD,peggedUSD,crypto-backed,fx-rusd,Ethereum
+217,Reservoir Stablecoin,rUSD,peggedUSD,fiat-backed,reservoir-rusd,Ethereum
+190,Revenue Generating USD,rgUSD,peggedUSD,crypto-backed,,"Ethereum,Base,Arbitrum"
+121,PSY,sLSD,peggedUSD,crypto-backed,,Arbitrum
+216,Solayer USD,sUSD,peggedUSD,fiat-backed,solayer-usd,Solana
+218,River Stablecoin,satUSD,peggedUSD,crypto-backed,satoshi-stablecoin,"BSC,Ethereum,Base,Arbitrum,Bitlayer,Sonic,X Layer,Hemi,Bevm,Bsquared,Bob"
+236,Synnax Stablecoin,syUSD,peggedUSD,crypto-backed,syusd,Sei
+151,zkUSD Dollar,zkUSD,peggedUSD,crypto-backed,,ZKsync Era
+181,Zunami USD,zunUSD,peggedUSD,crypto-backed,,Ethereum
+137,Collateralized Debt Token,CDT,peggedVAR,crypto-backed,collateralized-debt-token,Osmosis
+105,DeFi Franc,DCHF,peggedVAR,crypto-backed,,Ethereum
+41,Float Protocol Float,FLOAT,peggedVAR,algorithmic,,Ethereum
+66,Frax Price Index,FPI,peggedVAR,algorithmic,frax-price-index,"Ethereum,ZKsync Era"
+186,International Stable Currency,ISC,peggedVAR,fiat-backed,international-stable-currency,Solana
+40,Rai Reflex Index,RAI,peggedVAR,crypto-backed,rai,"Ethereum,Loopring,OP Mainnet,Polygon,Arbitrum,Gnosis,Avalanche"
+113,SILK,SILK,peggedVAR,crypto-backed,silk-bcec1136-561c-4706-a42c-8b67d0d7f7d2,Secret
+39,VOLT Protocol,VOLT,peggedVAR,algorithmic,,"Arbitrum,Ethereum"
+167,Fractional ETH,fETH,peggedVAR,crypto-backed,,Ethereum
+182,Zunami ETH,zunETH,peggedVAR,crypto-backed,,Ethereum
