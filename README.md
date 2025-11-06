@@ -1,664 +1,544 @@
-# 稳定币发展分析与预测系统# 稳定币发展分析与预测系统
+# 稳定币发展分析与预测系统
 
+## 项目简介
 
+本项目是针对 2025 年第六届"大湾区杯"粤港澳金融数学建模竞赛 B 题开发的稳定币分析系统。项目基于计量经济学方法，对全球稳定币市场进行全面分析，并对未来 5 年（2025-2030）的发展趋势进行预测。
 
-> **Stablecoin Development Analysis and Forecasting System**本项目实现了基于伪代码的完整稳定币分析流程，包括数据加载、特征构建、模型估计、预测和情景分析。
+**核心目标：**
+- 分析美元锚定稳定币（USD）与非美元锚定稳定币（非USD）的发展态势
+- 预测不同锚定货币稳定币的数量增长趋势
+- 评估监管政策、宏观经济和链上活动对稳定币市场的影响
+- 进行多情景分析（基线、友好监管、风险规避）
 
-> 
+## 项目特点
 
-> 基于ARDL/ECM、面板计数模型和2SLS的完整稳定币市场分析与预测系统## 项目结构
+### 1. 完整的数据处理流程
+- **21 个数据源**：涵盖稳定币存量、DEX 交易、跨链流动、宏观经济、监管政策等多维度数据
+- **月度时间序列构建**：统一时间频率到月末，构建完整的分析数据集
+- **锚定货币面板数据**：为 EUR、JPY、GBP、SGD、CHF 等非美元锚定货币构建面板数据
 
+### 2. 多层次建模体系
 
+#### A. ARDL/ECM 模型（时间序列）
+- 对 `log_S_USD` 和 `log_S_nonUSD` 建立误差修正模型
+- 自动选择最优滞后阶数（BIC 准则）
+- 考虑长期协整关系和短期动态调整
 
----```
+#### B. 面板计数模型（Negative Binomial）
+- 预测各锚定货币稳定币品种数量 `N_anchor`
+- 包含锚定货币固定效应和时间固定效应
+- 关键变量：政策指数、脱锚波动、汇率变化、市场规模
 
+#### C. 2SLS/IV 模型（份额方程）
+- 处理内生性问题的工具变量回归
+- 预测美元稳定币市场份额 `share_USD`
+- 工具变量：滞后政策指数、汇率周期
+
+### 3. 情景分析框架
+
+#### Base（基线情景）
+- 外生变量按历史趋势外推
+- 政策保持当前水平
+
+#### ProNonUSD（友好监管情景）
+- 非美元监管政策友好度提升（+2.0）
+- 脱锚波动下降 25%
+- 渐进式政策释放机制
+
+#### RiskOff（风险规避情景）
+- VIX、DXY 上升（避险情绪）
+- DEX 活跃度下降 20%
+- 渐进式负面冲击
+
+### 4. 创新方法
+
+- **渐进式政策释放**：政策效应非瞬时生效，而是在预测期内逐步释放
+- **N_anchor 与 S_nonUSD 联动**：币种数增长直接反馈到市值预测
+- **真实数据驱动**：使用 `total_stablecoins_mcap_by_peg.csv` 获取真实非 USD 市值
+- **增强政策变量**：区分正面政策（policy_stage）和负面禁令（ban_dummy）
+
+## 技术栈
+
+### 核心依赖
+```
+Python >= 3.8
+pandas >= 1.5.0
+numpy >= 1.23.0
+statsmodels >= 0.14.0  # ARDL, ECM, NegativeBinomial, 2SLS
+scipy >= 1.10.0
+matplotlib >= 3.6.0
+```
+
+### 主要模块
+- **statsmodels.tsa.api.ARDL**：自回归分布滞后模型
+- **statsmodels.discrete.count_model**：泊松/负二项回归
+- **statsmodels.sandbox.regression.gmm.IV2SLS**：两阶段最小二乘法
+
+## 项目结构
+
+```
 tidi_3/
-
-## 📋 项目概述├── main.py                         # 主入口脚本
-
-├── requirements.txt                # Python依赖
-
-本项目实现了稳定币市场的系统性分析，包括：├── README.md                       # 本文件
-
-- 美元与非美元稳定币的市值预测├── src/                           # 源代码目录
-
-- 不同锚定货币的币种数量预测（带固定效应）│   ├── config.py                  # 配置文件（路径、参数、常量）
-
-- 市场份额的结构分析│   ├── utils.py                   # 工具函数模块
-
-- 三种情景分析（Base、ProNonUSD、RiskOff）│   ├── 01_build_monthly.py        # 数据加载与月末主表构建
-
-│   ├── 02_build_anchor_panel.py   # 非美元锚定面板构建
-
-**核心特性**：│   ├── 03_estimate_models.py      # 模型估计（ARDL/ECM、面板计数、2SLS）
-
-- ✅ Anchor Fixed Effects（解决国家政策交叉影响）│   └── 04_forecast_scenarios.py   # 预测与情景分析
-
-- ✅ 方案B政策传导机制（Pol_anchor → N_anchor → S_nonUSD）├── data/                          # 原始数据目录
-
-- ✅ 自动模型选择（NB→Poisson回退）│   ├── chains_timeseries.csv
-
-- ✅ 完整的置信区间估计│   ├── total_stablecoins_mcap.csv
-
-│   ├── nonusd_offpeg_timeseries.csv
-
----│   ├── fx_anchor_to_usd.csv
-
-│   ├── dex_volume_total.csv
-
-## 🗂️ 项目结构│   ├── fees_by_chain.csv
-
-│   ├── bridge_flows_by_chain.csv
-
-```│   ├── vix.csv
-
-tidi_3/│   ├── usd_index.csv
-
-├── main.py                         # 主入口脚本（运行整个分析流程）│   ├── stablecoin_policy_dummies_monthly_2019_2025.csv
-
-├── requirements.txt                # Python依赖包列表│   └── ... (其他数据文件)
-
-├── README.md                       # 本文件├── build/                         # 中间结果目录
-
-││   ├── month_master.csv           # 月末主表
-
-├── src/                           # 源代码目录│   └── panel_anchor.csv           # 锚定面板
-
-│   ├── config.py                  # 配置文件（路径、参数、常量）├── outputs/                       # 最终输出目录
-
-│   ├── utils.py                   # 工具函数模块│   ├── fcst_base_*.csv            # 基线预测
-
-│   ├── 01_build_monthly.py        # §1-§2: 数据加载与月末主表构建│   ├── fcst_*_*.csv               # 情景预测
-
-│   ├── 02_build_anchor_panel.py   # §3: 非美元锚定面板构建│   ├── fig_*.png                  # 图表
-
-│   ├── 03_estimate_models.py      # §4-§5: 模型估计（ARDL/ECM、面板计数、2SLS）│   └── tab_*.tex                  # 回归表（LaTeX格式）
-
-│   └── 04_forecast_scenarios.py   # §6-§8: 预测与情景分析、结果导出└── logs/                          # 日志目录
-
-│    └── model_run.log              # 运行日志
-
-├── data/                          # 原始数据目录（17个CSV文件）```
-
-│   ├── chains_timeseries.csv              # 链上稳定币时序数据
-
-│   ├── total_stablecoins_mcap.csv         # 总市值数据## 功能模块
-
-│   ├── nonusd_offpeg_timeseries.csv       # 非USD脱锚时序数据
-
-│   ├── stablecoins_list.csv               # 稳定币列表### 1. 数据加载与月末主表构建 (`01_build_monthly.py`)
-
-│   ├── fx_anchor_to_usd.csv               # 汇率数据
-
-│   ├── dex_volume_total.csv               # DEX交易量**对应伪代码 §2**
-
-│   ├── fees_by_chain.csv                  # 链上费用
-
-│   ├── bridge_flows_by_chain.csv          # 跨链流动- 加载所有原始CSV数据
-
-│   ├── vix.csv                             # VIX波动率指数- 统一日期格式并转换为月末
-
-│   ├── usd_index.csv                       # 美元指数- 构造美元/非美元稳定币规模（S_USD、S_nonUSD、S_ALL）
-
-│   ├── btc_eth_market.csv                  # BTC/ETH市场数据- 计算份额（share_USD）
-
-│   ├── stablecoin_policy_dummies_monthly_2019_2025.csv  # 政策虚拟变量- 加入宏观变量（DEX、VIX、DXY）
-
-│   └── ... (其他数据文件)- 计算链上摩擦（FEE_wgt）与跨链流动（BRIDGE_net）
-
-│- 生成变换变量（log、z-score、差分等）
-
-├── build/                         # 中间结果目录
-
-│   ├── month_master.csv           # 月末主表（97个月×23个变量）**输出**: `build/month_master.csv`
-
-│   └── panel_anchor.csv           # 锚定面板（99行×8个anchor）
-
-│### 2. 非美元锚定面板构建 (`02_build_anchor_panel.py`)
-
-├── outputs/                       # 最终输出目录
-
-│   ├── tab_ecm_usd.tex            # USD ARDL模型回归表**对应伪代码 §3**
-
-│   ├── tab_ecm_nonusd.tex         # 非USD ARDL模型回归表
-
-│   ├── tab_panel_counts.tex       # 面板计数模型回归表（带Fixed Effects）- 统计每月在市品类数量（N_anchor）
-
-│   ├── tab_share_2sls.tex         # 份额2SLS模型回归表- 计算脱锚波动（sigma_offpeg）与尾部概率（tail1、tail2）
-
-│   │- 映射政策哑变量到各anchor（Pol_anchor）
-
-│   ├── fcst_base_*.csv            # 基线预测（6个文件）- 加入汇率周期（dlog_usd_per_anchor）
-
-│   ├── fcst_Base_*.csv            # Base情景（6个文件）- 创建滞后变量
-
-│   ├── fcst_ProNonUSD_*.csv       # ProNonUSD情景（6个文件）- 计算全局非美元品类数量（N_nonUSD）
-
-│   ├── fcst_RiskOff_*.csv         # RiskOff情景（6个文件）
-
-│   │**输出**: `build/panel_anchor.csv`
-
-│   ├── fig_usd_bands.png          # USD市值预测图（含置信区间）
-
-│   ├── fig_nonusd_bands.png       # 非USD市值预测图### 3. 模型估计 (`03_estimate_models.py`)
-
-│   ├── fig_share.png              # USD份额预测图（三情景对比）⭐
-
-│   └── fig_counts_anchor.png      # 各anchor币种数预测图**对应伪代码 §4-5**
-
+├── main.py                          # 主入口脚本
+├── requirements.txt                 # 依赖清单
+├── README.md                        # 项目文档（本文件）
 │
-
-└── logs/                          # 日志目录#### 模型A: ARDL/ECM
-
-    └── model_run.log              # 运行日志- 自动选择滞后阶数（BIC）
-
-```- 估计误差修正模型
-
-- Bounds Test（协整检验）
-
----- 分别估计 `log_S_USD` 和 `log_S_nonUSD`
-
-
-
-## 🚀 快速开始#### 模型B: 面板计数（泊松/负二项）
-
-- 检测过度离散
-
-### 1. 环境配置- 估计 `N_anchor ~ Pol_anchor + sigma_offpeg + ...`
-
-- 固定效应（anchor、时间）
-
-```bash
-
-# 安装依赖#### 模型C: 份额方程（2SLS/IV）
-
-pip install -r requirements.txt- 第一阶段：预测 `dlog_S_nonUSD`（工具变量：Pol_nonUSD_l1、dlog_fx_cycle）
-
-```- 第二阶段：`logit_share_USD ~ dlog_S_nonUSD_hat + 控制变量`
-
-- 识别"非美元扩张 → 美元份额"效应
-
-**依赖包**：
-
-- `pandas` - 数据处理**输出**: 模型对象（可导出回归表）
-
-- `numpy` - 数值计算
-
-- `statsmodels` - 统计模型（ARDL/ECM、Poisson、2SLS）### 4. 预测与情景分析 (`04_forecast_scenarios.py`)
-
-- `matplotlib` - 图表绘制
-
-- `scipy` - 科学计算**对应伪代码 §6-8**
-
-
-
-### 2. 运行完整分析#### 基线预测
-
-- 外生变量外推（随机游走、均值回归、维持最后值）
-
-```bash- 基于ECM递推预测S_USD和S_nonUSD（60个月）
-
-# 运行整个分析流程（约4秒）- 计算份额路径
-
-python main.py
-
-```#### 三类情景
-
-1. **Base**: 维持当前政策和市场状态
-
-### 3. 查看结果2. **ProNonUSD**: 友好监管（Pol_nonUSD +0.5，脱锚波动 -15%）
-
-3. **RiskOff**: 风险规避（VIX +1σ，DXY +1.5σ，DEX低迷）
-
-```bash
-
-# 查看生成的图表#### 可视化
-
-start outputs/fig_share.png- 预测带状图（置信区间）
-
-- 份额路径对比
-
-# 查看回归表- 各anchor品类数预测
-
-code outputs/tab_panel_counts.tex
-
-**输出**: 
-
-# 查看预测数据- `outputs/fcst_*.csv` (预测数据)
-
-code outputs/fcst_ProNonUSD_share_levels.csv- `outputs/fig_*.png` (图表)
-
+├── src/                             # 源代码目录
+│   ├── __init__.py
+│   ├── config.py                    # 配置文件（路径、参数）
+│   ├── utils.py                     # 工具函数（日期处理、变换、统计）
+│   ├── 01_build_monthly.py          # 数据加载与月末主表构建
+│   ├── 02_build_anchor_panel.py     # 非美元锚定面板构建
+│   ├── 03_estimate_models.py        # 模型估计（ARDL/ECM、计数、2SLS）
+│   └── 04_forecast_scenarios.py     # 预测与情景分析
+│
+├── data/                            # 原始数据（21 个 CSV 文件）
+│   ├── chains_timeseries.csv        # 链上稳定币存量时间序列
+│   ├── total_stablecoins_mcap.csv   # 全球稳定币总市值
+│   ├── total_stablecoins_mcap_by_peg.csv  # 按锚定类型分类的市值
+│   ├── nonusd_offpeg_timeseries.csv # 非美元稳定币脱锚数据
+│   ├── dex_volume_total.csv         # DEX 总交易量
+│   ├── fees_by_chain.csv            # 各链交易费用
+│   ├── vix.csv                      # VIX 波动率指数
+│   ├── usd_index.csv                # 美元指数（DXY）
+│   ├── stablecoin_policy_dummies_enhanced_monthly_2019_2025.csv  # 增强政策数据
+│   └── ...                          # 其他数据文件
+│
+├── build/                           # 中间数据
+│   ├── month_master.csv             # 月末主表（核心数据集）
+│   └── panel_anchor.csv             # 锚定面板数据
+│
+├── outputs/                         # 输出结果
+│   ├── fcst_base_*.csv              # 基线预测结果
+│   ├── fcst_ProNonUSD_*.csv         # 友好监管情景预测
+│   ├── fcst_RiskOff_*.csv           # 风险规避情景预测
+│   ├── tab_ecm_*.tex                # 回归表（LaTeX 格式）
+│   ├── fig_*.png                    # 可视化图表
+│   └── ...
+│
+└── logs/                            # 运行日志
+    └── model_run.log
 ```
 
 ## 快速开始
 
----
-
-### 1. 环境准备
-
-## 📊 模型架构
+### 1. 安装依赖
 
 ```powershell
-
-### 模型A：ARDL/ECM（误差修正模型）# 创建虚拟环境（可选）
-
-python -m venv venv
-
-**目标变量**：.\venv\Scripts\Activate.ps1
-
-- `log_S_USD`：美元稳定币市值（对数）
-
-- `log_S_nonUSD`：非美元稳定币市值（对数）# 安装依赖
-
 pip install -r requirements.txt
-
-**外生变量**：```
-
-- `log_DEX`：去中心化交易所交易量
-
-- `z_VIX`：VIX波动率指数（标准化）### 2. 数据准备
-
-- `z_DXY`：美元指数（标准化）
-
-- `z_FEE_wgt`：链上费用加权确保 `data/` 目录下包含所有必需的CSV文件（见项目结构）。
-
-- `z_BRIDGE`：跨链流动强度
-
-### 3. 运行完整流程
-
-**模型设定**：
-
-- USD模型：ARDL(3, 0) - 3个滞后项，0个外生变量滞后```powershell
-
-- 非USD模型：ARDL(2, 0) - 2个滞后项# 运行主脚本（完整流程）
-
-- 自动选择滞后阶数（基于BIC准则）python main.py
-
 ```
 
----
-
-### 4. 单独运行各模块
-
-### 模型B：面板计数模型（Poisson回归 + Fixed Effects）⭐
+### 2. 运行完整分析
 
 ```powershell
+python main.py
+```
+
+### 3. 单独运行各模块
 
-**目标变量**：# 只构建月末主表
-
-- `N_anchor`：各锚定货币的稳定币数量python src/01_build_monthly.py
-
-
-
-**关键特性**：# 只构建锚定面板
-
-- ✅ **Anchor Fixed Effects**：7个哑变量（AUD基准）python src/02_build_anchor_panel.py
-
-- ✅ 解决国家政策交叉影响问题（中国禁令不影响欧洲）
-
-# 只估计模型（需要先有build/*.csv）
-
-**外生变量**：python src/03_estimate_models.py
-
-- `Pol_anchor_l1`：政策指数滞后项（系数=0.47）
-
-- `sigma_offpeg_l1`：脱锚波动率滞后项# 只运行预测（需要先有模型）
-
-- `log_S_nonUSD`：非USD总市值python src/04_forecast_scenarios.py
-
-- `dlog_usd_per_anchor`：汇率变化率```
-
-- `tail1_l1`：尾部风险滞后项
-
-- `log_DEX`, `z_DXY`, `z_VIX`：宏观变量## 配置说明
-
-- `anchor_CAD`, `anchor_CHF`, ... `anchor_SGD`：固定效应哑变量
-
-在 `src/config.py` 中可以修改：
-
-**模型性能**：
-
-- Pseudo R² - **预测跨度**: `FORECAST_HORIZON = 60`（默认60个月）
-
-- 观测数：83- **模型参数**: `MODEL_PARAMS`（滞后阶数、信息准则等）
-
-- **情景参数**: `SCENARIO_PARAMS`（政策冲击、VIX调整等）
-
-**关键预测**：- **anchor到jurisdiction映射**: `ANCHOR_TO_JURISDICTION`
-
-- EUR： **外生变量外推规则**: `EXOG_PROJECTION_RULES`
-
-- CHF
-
-- JPY/GBP
-
-- CNY
-
-### 中间结果 (`build/`)
-
----- `month_master.csv`: 月末主表，包含所有时序变量
-
-- `panel_anchor.csv`: 锚定面板，包含各anchor的统计指标
-
-### 模型C：份额2SLS模型
-
-### 最终结果 (`outputs/`)
-
-**目标变量**：- `fcst_base_S_USD.csv`: 美元稳定币基线预测
-
-- `logit_share_USD`：USD份额的logit变换- `fcst_base_S_nonUSD.csv`: 非美元稳定币基线预测
-
-- `fcst_base_share_levels.csv`: 份额预测（水平法）
-
-**工具变量**：- `fcst_ProNonUSD_*.csv`: 友好监管情景预测
-
-- `log_DEX`：DEX交易量（外生冲击）- `fcst_RiskOff_*.csv`: 风险规避情景预测
-
-- `fig_nonusd_bands.png`: 非美元规模预测带状图
-
-**模型性能**：- `tab_ecm_*.tex`: 回归表（LaTeX格式）
-
-
-
-- `model_run.log`: 完整运行日志
-
----
-
-## 核心变量说明
-
-## 🎯 情景分析
-
-### 月度时序变量
-
-### 情景1：Base（基线）- `S_USD`: 美元稳定币规模（USD）
-
-- `S_nonUSD`: 非美元稳定币规模（USD）
-
-**设定**：维持当前政策和市场状态- `S_ALL`: 全部稳定币规模（USD）
-
-- `share_USD`: 美元稳定币份额
-
-**预测结果**：- `DEX`: DEX月度成交量
-
-- USD份额：波动率指数（月均）
-
-- S_USD：DXY`: 美元指数（月末）
-
-- S_nonUSD：`FEE_wgt`: 链上费用加权均值
-
-- N_nonUSD总数：`BRIDGE_net`: 跨链净流入
-
-- `Pol_nonUSD`: 非美元政策指数（加权）
-
----
-
-### 面板变量（anchor × month）
-
-### 情景2：ProNonUSD（友好监管）⭐- `N_anchor`: 各anchor的在市品类数
-
-- `sigma_offpeg`: 脱锚波动（标准差）
-
-**政策冲击**：- `tail1`, `tail2`: 脱锚尾部概率（>1%、>2%）
-
-- `Pol_anchor_l1 +2.0`（监管友好，政策指数提升2个单位）- `Pol_anchor`: 各anchor的政策指数
-
-- `sigma_offpeg -25%`（脱锚波动下降）- `dlog_usd_per_anchor`: 汇率周期
-
-
-
-```### 链名映射
-
-- 统一链名别名（如 eth → Ethereum）
-
-**预测结果**：- 加权使用"各链USD稳定币存量占比"
-
-- USD份额
-
-- N_nonUSD总数
-
-- 关键洞察：监管放松可使非USD市值增长
-
-- 政策强度 = active_regime_dummy + non_us_currency_covered_dummy
-
----- 多个jurisdiction取平均
-
-
-
-### 情景3：RiskOff（风险规避）### 负值检查
-
-- `S_nonUSD` 可能为负（口径不一致）
-
-**市场冲击**
-
-
-- **pandas**: 数据处理
-
-**预测结果**：- **numpy**: 数值计算
-
-- USD份额：- **scipy**: 统计函数
-
-- 避险情绪下USD相对强势- **statsmodels**: 时间序列（ARDL）、面板（GLM）、2SLS
-
-- **matplotlib**: 绘图
-
----- **seaborn**: 美化图表
-
-
-
-## 📈 核心成果## 常见问题
-
-
-
-
-
-## 引用与参考
-
----
-
-本项目基于伪代码实现，对应赛题第3题的完整分析框架。
-
-## 🛠️ 技术亮点
-
-数据来源：
-
-### 1. Anchor Fixed Effects- **DeFiLlama**: 稳定币存量、链上分布、DEX数据
-
-
-- **解决**：添加7个anchor哑变量，完全隔离各国影响- **FRED**: VIX、美元指数
-
-**自定义**: 政策哑变量面板
-
-
-
-### 2. 方案B：N_anchor传导机制模型方法：
-
-
-- **创新**：政策 → 币种数 → 市值的完整传导链- **面板计数**: Cameron & Trivedi (2013)
-
-- **效果**：情景差异提升- **2SLS/IV**: Wooldridge (2010)
-
-
-
-### 3. 自动模型选择## 许可证
-
-- **逻辑**：检测过度离散 → 尝试NB → 收敛检查 → 回退Poisson
-
-- **效果**：模型稳定性提升本项目仅供学术研究使用。
-
-
-
-### 4. 完整的置信区间## 作者
-
-- **方法**：Bootstrap + ARDL原生CI
-
-- **应用**：所有预测图表包含80%和95%置信区间稳定币分析团队
-
-
-
----## 更新日志
-
-
-
-## 📚 输出文件说明- **v1.0** (2025-11-05): 初始版本，完整实现伪代码框架
-
-
-### 回归表（LaTeX格式，可直接用于论文）
-
-1. **`tab_ecm_usd.tex`**：USD ARDL/ECM模型
-   - 系数估计、标准误、显著性
-   - 误差修正项、滞后项
-
-2. **`tab_ecm_nonusd.tex`**：非USD ARDL/ECM模型
-   - 同上
-
-3. **`tab_panel_counts.tex`**：面板计数模型（含Fixed Effects）⭐
-   - 7个anchor固定效应系数
-
-
-4. **`tab_share_2sls.tex`**：份额2SLS模型
-   - 第一阶段、第二阶段结果
-   - 工具变量显著性
-
-### 预测数据（CSV格式）
-
-每个情景包含6个文件：
-- `fcst_*_S_USD.csv`：USD市值预测（对数空间+水平空间）
-- `fcst_*_S_nonUSD.csv`：非USD市值预测
-- `fcst_*_share_levels.csv`：份额预测（levels法）
-- `fcst_*_share_IV.csv`：份额预测（IV法）
-- `fcst_*_N_anchor.csv`：各anchor币种数预测（按anchor×月份）
-- `fcst_*_N_nonUSD.csv`：非USD总币种数预测
-
-### 图表（PNG格式，300 DPI）
-
-1. **`fig_usd_bands.png`**：USD市值预测
-   - 点预测 + 80%/95%置信区间
-
-2. **`fig_nonusd_bands.png`**：非USD市值预测
-   - 同上
-
-3. **`fig_share.png`**：USD份额三情景对比 ⭐⭐⭐
-   - Base（蓝色实线）
-   - ProNonUSD（橙色虚线）
-   - RiskOff（灰色虚线）
-
-4. **`fig_counts_anchor.png`**：各anchor币种数预测
-   - 4个anchor的时间序列
-   - EUR遥遥领先
-
----
-
-## 🔬 模型验证
-
-### 统计检验
-
-✅ **Fixed Effects显著性**：
-- 各anchor预测独立
-
-
-✅ **情景差异显著性**：
-- 统计显著 ✅
-
-### 预测合理性
-
-✅ **币种数排序**：EUR > CHF > JPY/GBP > CNY
-✅ **市值变化**：非USD增长合理的政策效应）
-✅ **份额稳定**：USD保持97%+（符合市场惯性）
-
----
-
-## 📖 使用指南
-
-### 修改情景参数
-
-编辑 `src/config.py` 中的 `SCENARIO_PARAMS`：
+```powershell
+# 步骤1：构建月末主表
+python src/01_build_monthly.py
+
+# 步骤2：构建锚定面板
+python src/02_build_anchor_panel.py
+
+# 步骤3：估计模型
+python src/03_estimate_models.py
+
+# 步骤4：预测与情景分析
+python src/04_forecast_scenarios.py
+```
+
+## 核心功能模块详解
+
+### 模块 1：数据加载与月末主表构建 (`01_build_monthly.py`)
+
+**主要功能：**
+- 加载 21 个原始数据文件
+- 统一日期格式并转换为月末
+- 计算美元/非美元稳定币规模（`S_USD`, `S_nonUSD`）
+- 构造宏观变量（VIX, DXY, DEX）
+- 计算链上摩擦指标（加权费用、跨链流动）
+- 生成变换变量（log, z-score, diff）
+
+**关键类：**
+- `RawDataLoader`：批量加载数据
+- `MonthlyMasterBuilder`：构建月末主表
+
+**输出：**
+- `build/month_master.csv`（核心数据集）
+
+### 模块 2：非美元锚定面板构建 (`02_build_anchor_panel.py`)
+
+**主要功能：**
+- 统计每月各锚定货币（EUR, JPY, GBP 等）的在市品类数量 `N_anchor`
+- 计算脱锚波动指标（`sigma_offpeg`, `tail1`, `tail2`）
+- 映射增强政策变量到各 anchor（区分正负面政策）
+- 计算汇率周期影响 `dlog_usd_per_anchor`
+
+**关键类：**
+- `AnchorPanelBuilder`：面板数据构建器
+
+**创新点：**
+- 政策变量 `Pol_anchor = policy_stage - ban_dummy`（净政策友好度）
+- 区分正面政策推进和负面禁令冲击
+
+**输出：**
+- `build/panel_anchor.csv`
+
+### 模块 3：模型估计 (`03_estimate_models.py`)
+
+**包含 3 类模型：**
+
+#### A. ARDL/ECM 模型
+```python
+class ARDLEstimator:
+    - 自动选择滞后阶数（p_max=6, q_max=6, ic='bic'）
+    - 估计 ARDL 并转换为 ECM 形式
+    - Bounds Test 协整检验
+```
+
+**估计方程：**
+```
+Δlog_S_t = α + β₁*ECT_{t-1} + Σγᵢ*Δlog_S_{t-i} + Σδⱼ*ΔX_{t-j} + εₜ
+```
+
+#### B. 面板计数模型
+```python
+class PanelCountEstimator:
+    - Negative Binomial 回归（处理过度离散）
+    - 包含 Anchor 固定效应
+    - Pseudo R² ≈ 0.21
+```
+
+**关键变量：**
+- `Pol_anchor_l1`：政策指数（p<0.001, coef=0.88）⭐⭐⭐
+- `sigma_offpeg_l1`：脱锚波动（p<0.001, coef=0.17）⭐⭐⭐
+- `dlog_usd_per_anchor`：汇率变化率（p=0.047, coef=11.85）⭐⭐
+
+#### C. 2SLS/IV 模型
+```python
+class IVEstimator:
+    - 第一阶段：预测 dlog_S_nonUSD
+    - 第二阶段：预测 logit(share_USD)
+    - 处理内生性问题
+```
+
+**输出：**
+- `outputs/tab_ecm_usd.tex`（USD 模型回归表）
+- `outputs/tab_ecm_nonusd.tex`（非 USD 模型回归表）
+- `outputs/tab_panel_counts.tex`（计数模型回归表）
+- `outputs/tab_share_2sls.tex`（份额模型回归表）
+
+### 模块 4：预测与情景分析 (`04_forecast_scenarios.py`)
+
+**预测流程：**
+
+#### 步骤 1：外生变量外推（5 种规则）
+```python
+class ExogProjector:
+    - rw: 随机游走
+    - rw-drift: 随机游走+漂移
+    - mean-revert: 均值回归（AR(1)）
+    - hold_last: 维持最后值
+    - ar1: 完整 AR(1) 模型
+```
+
+#### 步骤 2：递推 ECM 预测
+```python
+class ECMSimulator:
+    - 使用 ARDL 模型进行动态递推预测
+    - 计算 95% 置信区间（改进版：饱和函数限制 SE 增长）
+    - 支持 Monte Carlo 模拟
+```
+
+#### 步骤 3：份额路径
+```python
+class ShareForecaster:
+    - via_levels: 通过规模计算份额
+    - via_IV: 通过 IV 模型预测份额
+```
+
+#### 步骤 4：面板计数预测
+```python
+class PanelCountForecaster:
+    - 预测各 anchor 的 N_anchor
+    - 聚合为 N_nonUSD
+    - 支持渐进式政策释放
+```
+
+**情景分析创新：**
+
+| 情景 | 关键调整 | 实现方式 |
+|------|---------|---------|
+| **Base** | 历史趋势外推 | 标准预测 |
+| **ProNonUSD** | 政策友好 +2.0<br>脱锚波动 -25% | 渐进式释放（线性增长）<br>N_anchor↑ → S_nonUSD↑ |
+| **RiskOff** | VIX/DXY 上升<br>DEX -20% | 渐进式负面冲击<br>投资意愿↓ → 新币种↓ |
+
+**输出：**
+- 18 个预测 CSV 文件（3 情景 × 6 指标）
+- 4 个可视化图表（PNG 格式）
+
+## 配置参数说明
+
+### `src/config.py`
 
 ```python
+# 预测跨度
+FORECAST_HORIZON = 60  # 60 个月 ≈ 5 年
+
+# 模型参数
+MODEL_PARAMS = {
+    'ardl': {
+        'p_max': 6,      # 最大滞后阶数（因变量）
+        'q_max': 6,      # 最大滞后阶数（自变量）
+        'ic': 'bic',     # 信息准则
+    },
+    'panel': {
+        'fe_anchor': True,  # anchor 固定效应
+        'fe_time': True,    # 时间固定效应
+    }
+}
+
+# 外生变量外推规则
+EXOG_PROJECTION_RULES = {
+    'log_DEX': 'rw-drift',        # DEX：随机游走+漂移
+    'z_VIX': 'mean-revert',        # VIX：均值回归
+    'z_DXY': 'rw',                 # DXY：随机游走
+    'Pol_nonUSD_l1': 'hold_last',  # 政策：维持最后值
+}
+
+# 情景参数
 SCENARIO_PARAMS = {
     'ProNonUSD': {
-        'pol_shift': 2.0,           # 政策冲击大小（可调整）
-        'sigma_offpeg_reduction': 0.25,  # 脱锚波动下降比例
+        'pol_shift': 2.0,                  # 政策友好度提升
+        'sigma_offpeg_reduction': 0.25,    # 脱锚波动降低 25%
     },
-    # ...
+    'RiskOff': {
+        'vix_shift': -0.5,      # VIX 反向调整
+        'dxy_shift': -0.5,      # DXY 反向调整
+        'dex_trend': -0.2,      # DEX 趋势弱化
+    }
 }
 ```
 
-### 修改预测期数
+## 输出文件说明
 
-编辑 `src/config.py`：
+### 1. 预测结果 CSV
 
+| 文件名 | 描述 |
+|--------|------|
+| `fcst_base_S_USD.csv` | 基线：USD 稳定币规模预测 |
+| `fcst_base_S_nonUSD.csv` | 基线：非 USD 稳定币规模预测 |
+| `fcst_base_share_levels.csv` | 基线：USD 市场份额（levels 法）|
+| `fcst_base_share_IV.csv` | 基线：USD 市场份额（IV 法）|
+| `fcst_base_N_anchor.csv` | 基线：各锚定货币品种数 |
+| `fcst_base_N_nonUSD.csv` | 基线：非 USD 品种总数 |
+| `fcst_ProNonUSD_*.csv` | 友好监管情景（同上 6 个指标）|
+| `fcst_RiskOff_*.csv` | 风险规避情景（同上 6 个指标）|
+
+### 2. 可视化图表
+
+| 文件名 | 描述 |
+|--------|------|
+| `fig_nonusd_bands.png` | 非 USD 稳定币规模带状图（含 CI）|
+| `fig_usd_bands.png` | USD 稳定币规模带状图（含 CI）|
+| `fig_share.png` | USD 市场份额预测（双子图）|
+| `fig_counts_anchor.png` | 各锚定货币品种数预测（2×2 分面图）|
+
+### 3. 回归表（LaTeX）
+
+- `tab_ecm_usd.tex`：USD 误差修正模型
+- `tab_ecm_nonusd.tex`：非 USD 误差修正模型
+- `tab_panel_counts.tex`：面板计数模型
+- `tab_share_2sls.tex`：份额方程（2SLS）
+
+## 核心发现
+
+### 1. 政策影响显著
+- **政策指数系数 = 0.88（p<0.001）**：政策友好度每提升 1 单位，稳定币品种数增加约 0.88 个
+- 区分正面政策推进和负面禁令冲击至关重要
+
+### 2. 汇率效应明显
+- **汇率变化率系数 = 11.85（p=0.047）**：锚定货币升值 1%，该货币稳定币品种数增加约 11.8 个
+
+### 3. 脱锚波动影响
+- **脱锚波动系数 = 0.17（p<0.001）**：波动性增加反而促进品种数增加（可能反映市场活跃度）
+
+### 4. 预测结果（2025-2030）
+
+#### Base 情景
+- USD 稳定币：持续增长但增速放缓
+- 非 USD 稳定币：稳步增长
+- USD 市场份额：从 97% 缓慢下降至约 95%
+
+#### ProNonUSD 情景
+- 非 USD 稳定币：加速增长（币种数显著增加）
+- USD 市场份额：降至约 92-93%
+
+#### RiskOff 情景
+- 非 USD 稳定币：增长受抑制
+- USD 市场份额：保持在 96-97%（避险效应）
+
+## 关键技术亮点
+
+### 1. 渐进式政策释放机制
 ```python
-FORECAST_HORIZON = 60  # 预测60个月（5年），可修改
+# 政策效应在预测期内线性增长
+for i, date in enumerate(future_dates):
+    progress = (i + 1) / n_periods  # 0.017 → 1.0
+    pol_shift_progressive[date] = params['pol_shift'] * progress
 ```
 
-### 查看详细日志
+**优势：**
+- 更符合现实：政策生效需要时间
+- 避免预测突变：消除阶跃冲击的不现实性
+- 逻辑链完整：政策→币种数→市值→份额，层层传导
 
-```bash
-code logs/model_run.log
+### 2. N_anchor 与 S_nonUSD 联动
+```python
+# ProNonUSD 情景：币种数增加 X 倍 → 市值增加 X 倍
+N_ratio = N_anchor_pro / N_anchor_base
+S_nonUSD_adjusted['level'] *= N_ratio
 ```
 
----
+**逻辑：**
+- 币种数是市值的先导指标
+- 平均每个币种市值假设不变
+- 市场扩张主要靠新币种进入
 
-## 🎓 论文撰写建议
-
-### 建议的论文结构
-
-```
-4. 方法论
-  4.1 ARDL/ECM模型 → 引用 tab_ecm_*.tex
-  4.2 面板计数模型（含Fixed Effects）→ 引用 tab_panel_counts.tex ⭐
-  4.3 份额2SLS模型 → 引用 tab_share_2sls.tex
-  
-5. 结果
-  5.1 基线预测 → 插入 fig_usd_bands.png, fig_nonusd_bands.png
-  5.2 情景分析 → 插入 fig_share.png ⭐⭐⭐
-  5.3 政策传导机制 → 解释方案B逻辑
-  
-6. 讨论
-  6.1 欧元稳定币的领先地位
-  6.2 监管政策的市场影响
-  6.3 USD主导地位的持续性（97%+）
+### 3. 改进的置信区间
+```python
+# 使用饱和函数限制 SE 增长
+se_mult = sqrt(h)  # h <= 12
+se_mult = sqrt(12) + 0.5 * log(h/12)  # h > 12
 ```
 
+**优势：**
+- 短期预测：标准误随时间平方根增长
+- 长期预测：使用对数增长，避免 CI 过宽
+- 转回原始规模后更合理
+
+### 4. 增强政策变量
+```python
+# 净政策友好度 = 正面政策阶段 - 负面禁令
+Pol_anchor = policy_stage - ban_dummy
+# 范围：-1（纯禁令）到 3（生效且无禁令）
+```
+
+**优势：**
+- 区分政策方向：正面推动 vs 负面压制
+- 更精细刻画：4 个政策阶段（草案→通过→生效）
+- 提升解释力：显著改善模型拟合度
+
+## 依赖关系图
+
+```
+main.py
+  ├─> 01_build_monthly.py
+  │     └─> config.py, utils.py
+  │
+  ├─> 02_build_anchor_panel.py
+  │     └─> config.py, utils.py, 01_build_monthly.py
+  │
+  ├─> 03_estimate_models.py
+  │     └─> config.py, utils.py
+  │
+  └─> 04_forecast_scenarios.py
+        └─> config.py, utils.py
+```
+
+## 常见问题
+
+### Q1：为什么 ARDL 预测有时会失败？
+**A：** statsmodels 的 ARDL.predict 对外生变量格式要求严格。项目实现了 `_manual_recursive_forecast` 作为 fallback，确保预测稳健性。
+
+### Q2：ProNonUSD 情景为什么没有明显效果？
+**A：** 早期版本使用瞬时冲击，导致预测不连续。改进版使用**渐进式政策释放**，效应在 60 个月内线性增长，更符合现实。
+
+### Q3：如何调整预测跨度？
+**A：** 修改 `config.py` 中的 `FORECAST_HORIZON` 参数（单位：月）。
+
+### Q4：如何添加新的锚定货币？
+**A：** 在 `config.py` 的 `ANCHOR_TO_JURISDICTION` 中添加映射关系，确保原始数据中包含该货币的相关记录。
+
+### Q5：模型结果保存在哪里？
+**A：** 
+- 中间数据：`build/` 目录
+- 最终结果：`outputs/` 目录
+- 运行日志：`logs/model_run.log`
+
+## 性能优化建议
+
+### 1. 加速数据加载
+```python
+# 使用 pyarrow 引擎（需安装 pyarrow）
+df = pd.read_csv(path, engine='pyarrow')
+```
+
+### 2. 并行化模型估计
+```python
+from joblib import Parallel, delayed
+
+# 并行估计多个 anchor 的模型
+results = Parallel(n_jobs=-1)(
+    delayed(estimate_model)(anchor_data) 
+    for anchor_data in anchor_list
+)
+```
+
+### 3. 缓存中间结果
+```python
+import pickle
+
+# 保存模型对象
+with open('model.pkl', 'wb') as f:
+    pickle.dump(model, f)
+
+# 加载模型对象
+with open('model.pkl', 'rb') as f:
+    model = pickle.load(f)
+```
+
+## 贡献指南
+
+### 代码规范
+- 遵循 PEP 8 风格指南
+- 函数和类添加详细 docstring
+- 关键步骤添加中文注释
+
+### 提交流程
+1. Fork 本仓库
+2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
+4. 推送到分支 (`git push origin feature/AmazingFeature`)
+5. 开启 Pull Request
+
+## 许可证
+
+本项目仅供学术研究和竞赛使用，未经许可不得用于商业目的。
+
+## 联系方式
+
+- **项目仓库**：[https://github.com/chaossora/tidi_3](https://github.com/chaossora/tidi_3)
+- **问题反馈**：请通过 GitHub Issues 提交
+
+## 致谢
+
+- 感谢"大湾区杯"组委会提供比赛平台
+- 感谢 DeFiLlama、FRED、CoinGecko 等数据提供方
+- 感谢 statsmodels 开发团队提供强大的计量工具
+
+## 更新日志
+
+### v1.0.0 (2025-11-06)
+- ✅ 完整实现 ARDL/ECM、面板计数、2SLS 模型
+- ✅ 渐进式政策释放机制
+- ✅ N_anchor 与 S_nonUSD 联动调整
+- ✅ 增强政策变量（区分正负面）
+- ✅ 改进置信区间计算（饱和函数）
+- ✅ 三情景完整预测与可视化
 
 ---
 
-## ⚙️ 系统要求
-
-- **Python**：3.8+
-- **内存**：≥4GB
-- **硬盘**：≥500MB（含数据和输出）
-- **运行时间**：约4-5秒（完整流程）
-
----
-
-## 📝 版本信息
-
-- **版本**：1.0.0
-- **完成日期**：2025年11月6日
-
----
-
-## 🎉 项目完成度
-
-✅ **100% 完成**
-
-- ✅ 数据构建（97个月 + 99行面板）
-- ✅ 4个模型估计（ARDL×2, Poisson, 2SLS）
-- ✅ Fixed Effects实施（国家独立）
-- ✅ 方案B实施（情景差异×7）
-- ✅ 3情景预测（32个输出文件）
-- ✅ 4张图表（300 DPI）
-- ✅ 4张回归表（LaTeX）
-
-**可以直接用于论文撰写！** 🎓✨
-
----
-
-## 📧 联系方式
-
-如有问题，请查看 `logs/model_run.log` 或检查输出文件完整性。
-
----
-
-**End of README**
+**祝您使用愉快！如有问题欢迎反馈。**
