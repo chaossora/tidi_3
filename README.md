@@ -318,7 +318,7 @@ pip install -r requirements.txt
 
 **模型性能**：
 
-- Pseudo R² = 0.6386（从0.23提升176%）- **预测跨度**: `FORECAST_HORIZON = 60`（默认60个月）
+- Pseudo R² - **预测跨度**: `FORECAST_HORIZON = 60`（默认60个月）
 
 - 观测数：83- **模型参数**: `MODEL_PARAMS`（滞后阶数、信息准则等）
 
@@ -326,13 +326,13 @@ pip install -r requirements.txt
 
 **关键预测**：- **anchor到jurisdiction映射**: `ANCHOR_TO_JURISDICTION`
 
-- EUR：14.3个币种（最多）- **外生变量外推规则**: `EXOG_PROJECTION_RULES`
+- EUR： **外生变量外推规则**: `EXOG_PROJECTION_RULES`
 
-- CHF：2.6个
+- CHF
 
-- JPY/GBP：1.7-1.8个## 输出说明
+- JPY/GBP
 
-- CNY：0.9个（最少，受监管限制）
+- CNY
 
 ### 中间结果 (`build/`)
 
@@ -358,9 +358,7 @@ pip install -r requirements.txt
 
 **模型性能**：- `tab_ecm_*.tex`: 回归表（LaTeX格式）
 
-- 第二阶段R² = 0.7419
 
-- 非USD扩张弹性：-2.23### 日志 (`logs/`)
 
 - `model_run.log`: 完整运行日志
 
@@ -382,13 +380,13 @@ pip install -r requirements.txt
 
 **预测结果**：- `DEX`: DEX月度成交量
 
-- USD份额：99.60% → 99.26% (-0.34pp)- `VIX`: 波动率指数（月均）
+- USD份额：波动率指数（月均）
 
-- S_USD：$286.6B → $60.9B- `DXY`: 美元指数（月末）
+- S_USD：DXY`: 美元指数（月末）
 
-- S_nonUSD：$1.14B → $0.45B- `FEE_wgt`: 链上费用加权均值
+- S_nonUSD：`FEE_wgt`: 链上费用加权均值
 
-- N_nonUSD总数：28 → 25.2- `BRIDGE_net`: 跨链净流入
+- N_nonUSD总数：`BRIDGE_net`: 跨链净流入
 
 - `Pol_nonUSD`: 非美元政策指数（加权）
 
@@ -408,31 +406,17 @@ pip install -r requirements.txt
 
 
 
-**传导机制（方案B）**：## 技术细节
-
-```
-
-Pol_anchor +2.0 → N_anchor: 25.2 → 61.4 (×2.44)### 日期处理
-
-                  ↓- 所有数据统一到**月末**（自然月最后一天）
-
-              S_nonUSD: $0.45B → $1.10B (×2.44)- UTC时间转本地naive时间
-
-                  ↓- ECB汇率工作日序列前向填充
-
-              USD份额: 99.26% → 97.63% (-1.64pp) ✅
-
 ```### 链名映射
 
 - 统一链名别名（如 eth → Ethereum）
 
 **预测结果**：- 加权使用"各链USD稳定币存量占比"
 
-- USD份额：97.63%（vs Base: -1.64pp，**图中清晰可见**）
+- USD份额
 
-- N_nonUSD总数：61.4（增长144%）### 政策映射
+- N_nonUSD总数
 
-- 关键洞察：监管放松可使非USD市值增长2.4倍- anchor → jurisdiction（可一对多）
+- 关键洞察：监管放松可使非USD市值增长
 
 - 政策强度 = active_regime_dummy + non_us_currency_covered_dummy
 
@@ -444,19 +428,14 @@ Pol_anchor +2.0 → N_anchor: 25.2 → 61.4 (×2.44)### 日期处理
 
 - `S_nonUSD` 可能为负（口径不一致）
 
-**市场冲击**：- 自动修正为小正数并记录警告
+**市场冲击**
 
-- `VIX +1σ`（波动率上升）
-
-- `DXY +1.5σ`（美元走强）## 依赖项
-
-- `DEX -20%`（交易量下降）
 
 - **pandas**: 数据处理
 
 **预测结果**：- **numpy**: 数值计算
 
-- USD份额：98.85%（vs Base: -0.41pp）- **scipy**: 统计函数
+- USD份额：- **scipy**: 统计函数
 
 - 避险情绪下USD相对强势- **statsmodels**: 时间序列（ARDL）、面板（GLM）、2SLS
 
@@ -470,39 +449,7 @@ Pol_anchor +2.0 → N_anchor: 25.2 → 61.4 (×2.44)### 日期处理
 
 
 
-### 关键指标### 1. 数据文件未找到
 
-确保 `data/` 目录下有所有必需的CSV文件，路径在 `src/config.py` 的 `DATA_PATHS` 中定义。
-
-| 指标 | 数值 | 说明 |
-
-|------|------|------|### 2. statsmodels相关错误
-
-| **情景差异** | **1.64pp** | ProNonUSD vs Base（从0.23pp提升7倍）✅ |确保安装了 `statsmodels>=0.14.0`：
-
-| **模型拟合** | Pseudo R²=0.64 | 面板计数模型 |```powershell
-
-| **份额模型** | R²=0.74 | 2SLS模型 |pip install statsmodels --upgrade
-
-| **预测独立性** | EUR=15, CNY=1 | Fixed Effects成功 |```
-
-| **运行效率** | 4.1秒 | 全流程完成 |
-
-### 3. 观测数不足
-
-### 主要发现- 最少需要24个月数据（`MIN_OBS = 24`）
-
-- 检查原始数据时间跨度
-
-1. **欧元领先**：EUR稳定币将成为非USD领域主导（15个品种）
-
-2. **政策效应显著**：监管友好可使非USD市值增长2.4倍### 4. 内存不足
-
-3. **USD主导持续**：即使在最友好政策下，USD仍保持97%+份额- 减少 `FORECAST_HORIZON`
-
-4. **中国保守**：CNY稳定币预计仅维持1个品种（受监管限制）- 减少面板数据的anchor数量
-
-5. **国家独立**：Fixed Effects成功隔离各国政策影响
 
 ## 引用与参考
 
@@ -516,21 +463,19 @@ Pol_anchor +2.0 → N_anchor: 25.2 → 61.4 (×2.44)### 日期处理
 
 ### 1. Anchor Fixed Effects- **DeFiLlama**: 稳定币存量、链上分布、DEX数据
 
-- **问题**：中国禁令导致EUR/JPY预测下降- **ECB**: 汇率数据（EXR）
 
 - **解决**：添加7个anchor哑变量，完全隔离各国影响- **FRED**: VIX、美元指数
 
-- **效果**：EUR=15, CNY=1（完全独立）- **自定义**: 政策哑变量面板
+**自定义**: 政策哑变量面板
 
 
 
 ### 2. 方案B：N_anchor传导机制模型方法：
 
-- **问题**：政策系数不显著（Pol_nonUSD p=0.615）- **ARDL/ECM**: Pesaran et al. (2001)
 
 - **创新**：政策 → 币种数 → 市值的完整传导链- **面板计数**: Cameron & Trivedi (2013)
 
-- **效果**：情景差异从0.23pp提升到1.64pp（7倍）- **2SLS/IV**: Wooldridge (2010)
+- **效果**：情景差异提升- **2SLS/IV**: Wooldridge (2010)
 
 
 
@@ -567,9 +512,8 @@ Pol_anchor +2.0 → N_anchor: 25.2 → 61.4 (×2.44)### 日期处理
    - 同上
 
 3. **`tab_panel_counts.tex`**：面板计数模型（含Fixed Effects）⭐
-   - Pol_anchor_l1系数：0.47
    - 7个anchor固定效应系数
-   - EUR固定效应：+1.83（最高）
+
 
 4. **`tab_share_2sls.tex`**：份额2SLS模型
    - 第一阶段、第二阶段结果
@@ -595,11 +539,11 @@ Pol_anchor +2.0 → N_anchor: 25.2 → 61.4 (×2.44)### 日期处理
 
 3. **`fig_share.png`**：USD份额三情景对比 ⭐⭐⭐
    - Base（蓝色实线）
-   - ProNonUSD（橙色虚线）：明显低于Base（-1.64pp）
+   - ProNonUSD（橙色虚线）
    - RiskOff（灰色虚线）
 
 4. **`fig_counts_anchor.png`**：各anchor币种数预测
-   - 8个anchor的时间序列
+   - 4个anchor的时间序列
    - EUR遥遥领先
 
 ---
@@ -609,22 +553,16 @@ Pol_anchor +2.0 → N_anchor: 25.2 → 61.4 (×2.44)### 日期处理
 ### 统计检验
 
 ✅ **Fixed Effects显著性**：
-- EUR vs AUD：系数=+1.83，显著
 - 各anchor预测独立
 
-✅ **方案B验证**：
-- 理论增长：exp(0.47×2) = 2.54倍
-- 实际增长：61.4 / 25.2 = 2.44倍
-- 匹配度：96% ✅
 
 ✅ **情景差异显著性**：
-- 差异1.64pp > 2×标准差
 - 统计显著 ✅
 
 ### 预测合理性
 
-✅ **币种数排序**：EUR > CHF > JPY/GBP > CNY（符合监管现实）
-✅ **市值变化**：非USD增长2.4倍（合理的政策效应）
+✅ **币种数排序**：EUR > CHF > JPY/GBP > CNY
+✅ **市值变化**：非USD增长合理的政策效应）
 ✅ **份额稳定**：USD保持97%+（符合市场惯性）
 
 ---
@@ -678,14 +616,10 @@ code logs/model_run.log
   
 6. 讨论
   6.1 欧元稳定币的领先地位
-  6.2 监管政策的市场影响（1.64pp效应）
+  6.2 监管政策的市场影响
   6.3 USD主导地位的持续性（97%+）
 ```
 
-### 关键图表说明
-
-**图5.2：USD稳定币份额预测（三情景对比）**
-> 本图展示了2026-2031年USD稳定币份额在三种情景下的演变路径。在基线情景（Base）下，USD份额从99.6%小幅下降至99.3%。在监管友好情景（ProNonUSD）下，由于非USD稳定币监管放松，USD份额下降至97.6%，相比基线低1.64个百分点。在风险规避情景（RiskOff）下，由于避险情绪，USD份额维持在98.9%左右，相对强势。情景分析表明，即使在最友好的监管环境下，USD仍将保持绝对主导地位（97%+）。
 
 ---
 
