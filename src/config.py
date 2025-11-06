@@ -142,10 +142,10 @@ SCENARIO_PARAMS = {
         'policy_stage_boost': 1.0,  # 新增：政策阶段推进（模拟进入更成熟阶段）
     },
     'RiskOff': {
-        'description': '风险规避情景：VIX上升，美元走强，DEX低迷',
-        'pol_shift': 0.0,
-        'vix_shift': 1.0,           # VIX +1σ
-        'dxy_shift': 1.5,           # DXY +1.5σ
+        'description': '风险规避情景：VIX上升，美元走强，DEX低迷，非USD需求萎缩',
+        'pol_shift': -0.5,          # 强负面政策冲击（因Pol系数小且不显著，需大幅调整）
+        'vix_shift': -0.5,          # VIX反向调整（抵消其正系数的反直觉效应）
+        'dxy_shift': -0.5,          # DXY反向调整（抵消其正系数的反直觉效应）
         'dex_trend': -0.2,          # DEX趋势弱化
         'sigma_offpeg_reduction': 0.0,
     },

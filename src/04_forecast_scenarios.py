@@ -801,10 +801,15 @@ def forecast_baseline(models: dict, month: pd.DataFrame,
 
 
 def build_future_panel_exog(panel: pd.DataFrame, month: pd.DataFrame,
-                            X_future: pd.DataFrame) -> pd.DataFrame:
+                            X_future: pd.DataFrame, 
+                            pol_shift_progressive: dict = None) -> pd.DataFrame:
     """
     构造未来期的面板外生变量
     对应伪代码 §6.4: build_future_panel_exog
+    
+    参数:
+        pol_shift_progressive: 渐进式政策冲击字典 {month_end: shift_value}
+                              用于ProNonUSD情景，让政策效应随时间逐渐释放
     """
     # 获取unique anchors
     unique_anchors = panel['anchor'].unique()
@@ -850,13 +855,20 @@ def build_future_panel_exog(panel: pd.DataFrame, month: pd.DataFrame,
                 # Pol_anchor_l1: 使用最后值（政策指数通常持续）
                 # 注意：如果panel已被调整（如ProNonUSD情景），这里会继承调整后的值
                 if 'Pol_anchor_l1' in anchor_hist.columns:
-                    record['Pol_anchor_l1'] = anchor_hist['Pol_anchor_l1'].iloc[-1]
+                    base_pol = anchor_hist['Pol_anchor_l1'].iloc[-1]
                 else:
                     # 如果没有Pol_anchor_l1，使用Pol_anchor的最后值
                     if 'Pol_anchor' in anchor_hist.columns:
-                        record['Pol_anchor_l1'] = anchor_hist['Pol_anchor'].iloc[-1]
+                        base_pol = anchor_hist['Pol_anchor'].iloc[-1]
                     else:
-                        record['Pol_anchor_l1'] = 0.0
+                        base_pol = 0.0
+                
+                # ===== 渐进式政策释放（关键修改）=====
+                # 如果提供了渐进式冲击路径，叠加到基础值上
+                if pol_shift_progressive is not None and month_end in pol_shift_progressive:
+                    record['Pol_anchor_l1'] = base_pol + pol_shift_progressive[month_end]
+                else:
+                    record['Pol_anchor_l1'] = base_pol
                 
                 # sigma_offpeg_l1: 使用最近5期均值（波动性均值回归）
                 record['sigma_offpeg_l1'] = anchor_sigma_mean.get(anchor, 0)
@@ -953,14 +965,48 @@ def run_scenarios(models: dict, month: pd.DataFrame,
                 panel_scenario['sigma_offpeg_l1'] = panel_scenario.groupby('anchor')['sigma_offpeg'].shift(1)
                 logger.info(f"  脱锚波动降低: {params['sigma_offpeg_reduction']:.1%}")
         
-        # ===== 方案B: 对Pol_anchor施加冲击（ProNonUSD情景） =====
-        # 这样政策效应通过面板计数模型传导：Pol_anchor → N_anchor → S_nonUSD
+        # ===== 渐进式政策释放（ProNonUSD情景）=====
+        # 政策效应随时间逐渐增强，从0线性增长到最大值
+        pol_shift_progressive = None
         if params['pol_shift'] != 0 and scenario_name == 'ProNonUSD':
-            if 'Pol_anchor_l1' in panel_scenario.columns:
-                # 对所有anchor的Pol_anchor_l1施加相同冲击
-                panel_scenario['Pol_anchor_l1'] = panel_scenario['Pol_anchor_l1'].fillna(0) + params['pol_shift']
-                logger.info(f"  面板政策冲击 (Pol_anchor_l1): +{params['pol_shift']}")
-                logger.info(f"    逻辑链: 友好政策 → 币种数↑ → 市值↑ → USD份额↓")
+            # 构建渐进式政策路径：线性增长
+            future_dates = X_scenario['month_end'].values
+            n_periods = len(future_dates)
+            pol_shift_progressive = {}
+            
+            for i, date in enumerate(future_dates):
+                # 线性增长：从0增长到params['pol_shift']
+                # 第1期: 0 * pol_shift, 第2期: (1/n) * pol_shift, ..., 最后一期: pol_shift
+                progress = (i + 1) / n_periods  # 0.017 -> 1.0
+                pol_shift_progressive[date] = params['pol_shift'] * progress
+            
+            logger.info(f"  渐进式政策释放 (Pol_anchor_l1):")
+            logger.info(f"    起始值: {pol_shift_progressive[future_dates[0]]:.3f}")
+            logger.info(f"    中期值: {pol_shift_progressive[future_dates[n_periods//2]]:.3f}")
+            logger.info(f"    最终值: {pol_shift_progressive[future_dates[-1]]:.3f}")
+            logger.info(f"    逻辑链: 友好政策逐步推进 → 币种数逐步增长 → 市值逐步增长 → USD份额逐步下降")
+        
+        # ===== RiskOff情景：渐进式负面冲击 =====
+        # 风险规避导致投资者偏好减少，新项目减少
+        if scenario_name == 'RiskOff':
+            # 构建负面政策路径：从0逐渐下降
+            future_dates = X_scenario['month_end'].values
+            n_periods = len(future_dates)
+            pol_shift_progressive = {}
+            
+            # 负面冲击：-1.0（相当于ProNonUSD的一半负面影响）
+            negative_shock = -1.0
+            
+            for i, date in enumerate(future_dates):
+                # 线性下降：从0下降到negative_shock
+                progress = (i + 1) / n_periods
+                pol_shift_progressive[date] = negative_shock * progress
+            
+            logger.info(f"  渐进式风险规避冲击 (Pol_anchor_l1):")
+            logger.info(f"    起始值: {pol_shift_progressive[future_dates[0]]:.3f}")
+            logger.info(f"    中期值: {pol_shift_progressive[future_dates[n_periods//2]]:.3f}")
+            logger.info(f"    最终值: {pol_shift_progressive[future_dates[-1]]:.3f}")
+            logger.info(f"    逻辑链: 风险规避 → 投资意愿下降 → 新币种减少 → 市值增长放缓")
         
         # 递推ECM + 面板计数 + 份额
         scenario_results = {}
@@ -1003,7 +1049,11 @@ def run_scenarios(models: dict, month: pd.DataFrame,
             else:
                 X_scenario_with_S = X_scenario
             
-            panel_future = build_future_panel_exog(panel_scenario, month, X_scenario_with_S)
+            # ===== 传入渐进式政策路径（关键修改）=====
+            panel_future = build_future_panel_exog(
+                panel_scenario, month, X_scenario_with_S, 
+                pol_shift_progressive=pol_shift_progressive
+            )
             forecaster = PanelCountForecaster(models['counts'].get('model'))
             N_anchor_fc = forecaster.predict(panel_future)
             scenario_results['N_anchor'] = N_anchor_fc
@@ -1186,12 +1236,12 @@ def plot_all_charts(fcst_base: dict, scenarios: dict):
             'USD Stablecoin Share Forecast'
         )
     
-    # 图4: anchor计数
+    # 图4: anchor计数（添加情景对比）
     if 'N_anchor' in fcst_base:
         plot_counts_chart(
-            fcst_base['N_anchor'],
+            fcst_base, scenarios,
             OUTPUT_FILES['fig_counts_anchor'],
-            'Stablecoin Count by Anchor'
+            'Stablecoin Count by Anchor (Scenarios)'
         )
 
 
@@ -1238,36 +1288,63 @@ def plot_bands_chart(fcst_base: dict, scenarios: dict, key: str,
 
 def plot_share_chart(fcst_base: dict, scenarios: dict,
                     output_path: Path, title: str):
-    """绘制份额图"""
-    fig, ax = plt.subplots(figsize=(14, 7))
+    """绘制份额图 - 使用双子图展示绝对值和相对变化"""
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(14, 10))
     
-    colors = plt.cm.Set2(np.linspace(0, 1, 2 + len(scenarios)))
+    colors = {'Base': '#2ecc71', 'ProNonUSD': '#f39c12', 'RiskOff': '#e74c3c'}
     
-    # 基线 - levels法
+    # === 上图: 绝对份额 ===
+    # 基线 - levels法（使用实线，加粗）
     if 'share_levels' in fcst_base:
-        df = fcst_base['share_levels']
-        ax.plot(df['month_end'], df['share_USD'], label='Base (levels)',
-               color=colors[0], linewidth=2.5)
-    
-    # 基线 - IV法
-    if 'share_IV' in fcst_base:
-        df = fcst_base['share_IV']
-        ax.plot(df['month_end'], df['share_USD'], label='Base (IV)',
-               color=colors[1], linewidth=2, linestyle=':')
+        df_base = fcst_base['share_levels'].copy()
+        ax1.plot(df_base['month_end'], df_base['share_USD'], 
+                label='Base', color=colors['Base'], linewidth=3, alpha=0.9)
     
     # 情景
-    for i, (scen_name, scen_dict) in enumerate(scenarios.items(), 2):
+    linestyles = {'ProNonUSD': '--', 'RiskOff': ':'}
+    for scen_name, scen_dict in scenarios.items():
         if 'share_levels' in scen_dict:
             df = scen_dict['share_levels']
-            ax.plot(df['month_end'], df['share_USD'], label=scen_name,
-                   color=colors[i], linewidth=2, linestyle='--')
+            ax1.plot(df['month_end'], df['share_USD'], 
+                    label=scen_name, color=colors.get(scen_name, '#95a5a6'),
+                    linewidth=2.5, linestyle=linestyles.get(scen_name, '-'))
     
-    ax.set_xlabel('Date', fontsize=12)
-    ax.set_ylabel('USD Share', fontsize=12)
-    ax.set_title(title, fontsize=14, fontweight='bold')
-    ax.set_ylim([0, 1])
-    ax.legend(loc='best', fontsize=10)
-    ax.grid(True, alpha=0.3)
+    ax1.set_ylabel('USD Share (Absolute)', fontsize=12, fontweight='bold')
+    ax1.set_title('USD Stablecoin Share: Absolute Values', fontsize=13, fontweight='bold')
+    ax1.set_ylim([0.7, 1.0])  # 聚焦到实际变化区间
+    ax1.legend(loc='best', fontsize=11)
+    ax1.grid(True, alpha=0.3)
+    
+    # === 下图: 相对于基线的百分点差异 ===
+    if 'share_levels' in fcst_base:
+        base_share = df_base['share_USD'].values
+        
+        for scen_name, scen_dict in scenarios.items():
+            if 'share_levels' in scen_dict:
+                df_scen = scen_dict['share_levels']
+                # 计算百分点差异 (例如: 0.95 - 0.98 = -0.03 = -3个百分点)
+                diff_pct = (df_scen['share_USD'].values - base_share) * 100
+                
+                ax2.plot(df_scen['month_end'], diff_pct,
+                        label=f'{scen_name} vs Base', 
+                        color=colors.get(scen_name, '#95a5a6'),
+                        linewidth=2.5, linestyle=linestyles.get(scen_name, '-'))
+        
+        # 添加零线
+        ax2.axhline(y=0, color='gray', linestyle='-', linewidth=1, alpha=0.5)
+        
+        ax2.set_xlabel('Date', fontsize=12, fontweight='bold')
+        ax2.set_ylabel('Share Difference (percentage points)', fontsize=12, fontweight='bold')
+        ax2.set_title('USD Share Change Relative to Baseline', fontsize=13, fontweight='bold')
+        ax2.legend(loc='lower left', fontsize=11)  # 图例移到左下角
+        ax2.grid(True, alpha=0.3)
+        
+        # 添加注释框 - 放在左下角，图例下方
+        ax2.text(0.02, 0.25, 
+                'Negative = USD share declines (non-USD grows)\nPositive = USD share increases (non-USD shrinks)',
+                transform=ax2.transAxes, fontsize=9, 
+                verticalalignment='bottom', horizontalalignment='left',
+                bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5, edgecolor='gray'))
     
     plt.tight_layout()
     plt.savefig(output_path, dpi=300, bbox_inches='tight')
@@ -1276,31 +1353,68 @@ def plot_share_chart(fcst_base: dict, scenarios: dict,
     logger.info(f"  [OK] {output_path.name}")
 
 
-def plot_counts_chart(N_anchor_fc: pd.DataFrame, 
+def plot_counts_chart(fcst_base: dict, scenarios: dict,
                      output_path: Path, title: str):
-    """绘制anchor计数折线图"""
-    fig, ax = plt.subplots(figsize=(14, 7))
-    
-    if 'anchor' not in N_anchor_fc.columns:
+    """绘制anchor计数折线图（多情景对比）- 使用分面图展示"""
+    # 获取基线N_anchor数据
+    N_anchor_base = fcst_base.get('N_anchor')
+    if N_anchor_base is None or 'anchor' not in N_anchor_base.columns:
         logger.warning("  缺少anchor列，跳过计数图")
         return
     
-    unique_anchors = N_anchor_fc['anchor'].unique()[:10]  # 最多显示10个
-    colors = plt.cm.tab10(np.linspace(0, 1, len(unique_anchors)))
+    # 选择主要的anchor（按平均值排序，选前4个）
+    anchor_means = N_anchor_base.groupby('anchor')['N_anchor_fc'].mean().sort_values(ascending=False)
+    top_anchors = anchor_means.head(4).index.tolist()  # 只显示前4个最重要的
     
-    for i, anchor in enumerate(unique_anchors):
-        data = N_anchor_fc[N_anchor_fc['anchor'] == anchor]
-        ax.plot(data['month_end'], data.get('N_anchor_fc', data.get('N_anchor', 0)),
-               label=anchor, color=colors[i], linewidth=2.5, marker='o', markersize=2, alpha=0.8)
+    # 创建2x2子图
+    fig, axes = plt.subplots(2, 2, figsize=(16, 10))
+    axes = axes.flatten()
     
-    ax.set_xlabel('Date', fontsize=12)
-    ax.set_ylabel('Stablecoin Count', fontsize=12)
-    ax.set_title(title, fontsize=14, fontweight='bold')
-    # 使用线性刻度，更清晰展示小数值的变化
-    ax.set_ylim(bottom=0, top=max(11, N_anchor_fc.get('N_anchor_fc', N_anchor_fc.get('N_anchor', [10])).max() + 1))
-    ax.legend(loc='best', fontsize=9, ncol=2)
-    ax.grid(True, alpha=0.3)
+    colors = {'Base': '#3498db', 'ProNonUSD': '#e67e22', 'RiskOff': '#e74c3c'}
     
+    for idx, anchor in enumerate(top_anchors):
+        ax = axes[idx]
+        
+        # 基线（实线）
+        data_base = N_anchor_base[N_anchor_base['anchor'] == anchor]
+        ax.plot(data_base['month_end'], data_base['N_anchor_fc'],
+               label='Base', color=colors['Base'], linewidth=2.5, 
+               linestyle='-', alpha=0.8)
+        
+        # ProNonUSD情景（虚线，向上）
+        if 'ProNonUSD' in scenarios and 'N_anchor' in scenarios['ProNonUSD']:
+            N_anchor_pro = scenarios['ProNonUSD']['N_anchor']
+            data_pro = N_anchor_pro[N_anchor_pro['anchor'] == anchor]
+            if not data_pro.empty:
+                ax.plot(data_pro['month_end'], data_pro['N_anchor_fc'],
+                       label='ProNonUSD', color=colors['ProNonUSD'], linewidth=2.5,
+                       linestyle='--', alpha=0.9)
+        
+        # RiskOff情景（点线，向下）
+        if 'RiskOff' in scenarios and 'N_anchor' in scenarios['RiskOff']:
+            N_anchor_risk = scenarios['RiskOff']['N_anchor']
+            data_risk = N_anchor_risk[N_anchor_risk['anchor'] == anchor]
+            if not data_risk.empty:
+                ax.plot(data_risk['month_end'], data_risk['N_anchor_fc'],
+                       label='RiskOff', color=colors['RiskOff'], linewidth=2.0,
+                       linestyle=':', alpha=0.8)
+        
+        # 设置子图标题和标签
+        ax.set_title(f'{anchor} Stablecoins', fontsize=12, fontweight='bold')
+        ax.set_xlabel('Date', fontsize=10)
+        ax.set_ylabel('Count', fontsize=10)
+        ax.legend(loc='best', fontsize=9)
+        ax.grid(True, alpha=0.3)
+        
+        # 只在第一个子图添加详细说明
+        if idx == 0:
+            ax.text(0.02, 0.98, 
+                   'Solid: Base\nDashed: ProNonUSD\nDotted: RiskOff',
+                   transform=ax.transAxes, fontsize=8, 
+                   verticalalignment='top',
+                   bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.3))
+    
+    fig.suptitle(title, fontsize=14, fontweight='bold', y=0.995)
     plt.tight_layout()
     plt.savefig(output_path, dpi=300, bbox_inches='tight')
     plt.close()
