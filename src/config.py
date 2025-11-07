@@ -85,7 +85,7 @@ ANCHOR_TO_JURISDICTION = {
     'CHF': ['Switzerland'],
     'CAD': ['Canada (OSFI)'],
     'AUD': ['Australia'],
-    'CNY': ['China (Mainland)'],  # 新增，从增强数据中
+    'CNY': ['China (Mainland)'],  
     # 暂不使用的法域
     # 'HKD': [],  # Hong Kong
     # 'AED': ['Dubai (VARA, UAE)', 'ADGM (UAE)'],
@@ -139,7 +139,7 @@ SCENARIO_PARAMS = {
         'dxy_shift': 0.0,
         'dex_trend': 0.0,
         'sigma_offpeg_reduction': 0.25,  # 脱锚波动下降25%（提升：15%→25%）
-        'policy_stage_boost': 1.0,  # 新增：政策阶段推进（模拟进入更成熟阶段）
+        'policy_stage_boost': 1.0,  # 政策阶段推进（模拟进入更成熟阶段）
     },
     'RiskOff': {
         'description': '风险规避情景：VIX上升，美元走强，DEX低迷，非USD需求萎缩',
@@ -182,12 +182,12 @@ X_COMMON_VARS = [
     'Pol_nonUSD_l1'
 ]
 
-# 面板回归变量（最优版本 - 基于实证测试）
+# 面板回归变量
 PANEL_VARS = [
     # 核心显著变量
-    'Pol_anchor_l1',          # 政策指数 (p<0.001, coef=0.88) ⭐⭐⭐
-    'sigma_offpeg_l1',        # 脱锚波动（5期均值）(p<0.001, coef=0.17) ⭐⭐⭐
-    'dlog_usd_per_anchor',    # 汇率变化率 (p=0.047, coef=11.85) ⭐⭐ [新增]
+    'Pol_anchor_l1',          # 政策指数
+    'sigma_offpeg_l1',        # 脱锚波动
+    'dlog_usd_per_anchor',    # 汇率变化率
     
     # 结构控制变量（虽不显著但移除导致R²下降）
     'tail1_l1',               # 极端偏离
@@ -197,10 +197,6 @@ PANEL_VARS = [
     'log_S_nonUSD',           # 非美元市场规模
 ]
 
-# 优化说明:
-# - Pseudo R² = 0.2093 (提升5.7%)
-# - 观测数 = 83
-# - 核心发现: 汇率升值1% → 品种数增加11.8个
 
 # IV工具变量
 IV_INSTRUMENTS = [

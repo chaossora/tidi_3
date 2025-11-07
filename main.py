@@ -69,7 +69,7 @@ def main():
         
         panel_result = build_anchor_panel(raw_data, month)
         panel = panel_result['panel']
-        month = panel_result['month']  # 更新后的月表（含N_nonUSD）
+        month = panel_result['month']  
         
         # 保存面板
         panel.to_csv(OUTPUT_FILES['panel_anchor'], index=False)

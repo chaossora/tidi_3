@@ -373,7 +373,7 @@ class PanelCountEstimator:
             y = data[y_var]
             X = data[X_vars].copy()
             
-            # ===== 添加Anchor固定效应 =====
+            # ===== Anchor固定效应 =====
             # 创建anchor哑变量（隔离各国影响）
             anchor_dummies = pd.get_dummies(data['anchor'], prefix='anchor', drop_first=True)
             # 确保哑变量是数值类型
@@ -402,7 +402,7 @@ class PanelCountEstimator:
             logger.info(f"  方差/均值比: {var_mean_ratio:.2f}")
             
             try:
-                # 按伪代码要求：方差/均值 > 1.5 使用负二项，否则泊松
+                # 方差/均值 > 1.5 使用负二项，否则泊松
                 if var_mean_ratio > 1.5:
                     logger.info("  检测到过度离散，尝试负二项模型...")
                     if NegativeBinomial is not None:
@@ -495,7 +495,7 @@ class IVEstimator:
             ds['dlog_S_nonUSD'] = ds['log_S_nonUSD'].diff()
             
             # 创建dlog_fx_cycle（简化：使用Pol_nonUSD_l1代替）
-            ds['dlog_fx_cycle'] = ds['Pol_nonUSD_l1']  # 简化处理
+            ds['dlog_fx_cycle'] = ds['Pol_nonUSD_l1'] 
             
             # 工具变量
             Z_vars = [v for v in IV_INSTRUMENTS if v in ds.columns]

@@ -212,9 +212,9 @@ class PanelCountEstimator:
 ```
 
 **关键变量：**
-- `Pol_anchor_l1`：政策指数（p<0.001, coef=0.88）⭐⭐⭐
-- `sigma_offpeg_l1`：脱锚波动（p<0.001, coef=0.17）⭐⭐⭐
-- `dlog_usd_per_anchor`：汇率变化率（p=0.047, coef=11.85）⭐⭐
+- `Pol_anchor_l1`：政策指数
+- `sigma_offpeg_l1`：脱锚波动
+- `dlog_usd_per_anchor`：汇率变化率
 
 #### C. 2SLS/IV 模型
 ```python
@@ -472,7 +472,7 @@ main.py
 
 ### 1. 加速数据加载
 ```python
-# 使用 pyarrow 引擎（需安装 pyarrow）
+# 使用 pyarrow 引擎
 df = pd.read_csv(path, engine='pyarrow')
 ```
 
@@ -499,46 +499,3 @@ with open('model.pkl', 'wb') as f:
 with open('model.pkl', 'rb') as f:
     model = pickle.load(f)
 ```
-
-## 贡献指南
-
-### 代码规范
-- 遵循 PEP 8 风格指南
-- 函数和类添加详细 docstring
-- 关键步骤添加中文注释
-
-### 提交流程
-1. Fork 本仓库
-2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 开启 Pull Request
-
-## 许可证
-
-本项目仅供学术研究和竞赛使用，未经许可不得用于商业目的。
-
-## 联系方式
-
-- **项目仓库**：[https://github.com/chaossora/tidi_3](https://github.com/chaossora/tidi_3)
-- **问题反馈**：请通过 GitHub Issues 提交
-
-## 致谢
-
-- 感谢"大湾区杯"组委会提供比赛平台
-- 感谢 DeFiLlama、FRED、CoinGecko 等数据提供方
-- 感谢 statsmodels 开发团队提供强大的计量工具
-
-## 更新日志
-
-### v1.0.0 (2025-11-06)
-- ✅ 完整实现 ARDL/ECM、面板计数、2SLS 模型
-- ✅ 渐进式政策释放机制
-- ✅ N_anchor 与 S_nonUSD 联动调整
-- ✅ 增强政策变量（区分正负面）
-- ✅ 改进置信区间计算（饱和函数）
-- ✅ 三情景完整预测与可视化
-
----
-
-**祝您使用愉快！如有问题欢迎反馈。**

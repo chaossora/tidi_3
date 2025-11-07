@@ -15,7 +15,7 @@ import logging
 from pathlib import Path
 import sys
 
-# 添加src到路径
+
 sys.path.append(str(Path(__file__).parent))
 
 from config import DATA_PATHS, MIN_OBS, EPSILON, CHAIN_NAME_MAPPING
@@ -25,7 +25,7 @@ from utils import (
     add_constant, weighted_average, normalize_weights
 )
 
-# 配置日志
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
@@ -281,7 +281,7 @@ class MonthlyMasterBuilder:
         
         # 月末聚合
         fees_m = to_month_end(fees_df, date_col='date', 
-                             value_cols='fees_usd',  # 修正列名
+                             value_cols='fees_usd', 
                              group_by='chain', agg='sum')
         
         chains_m = to_month_end(chains_df, date_col='date', 

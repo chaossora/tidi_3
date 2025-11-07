@@ -2,7 +2,7 @@
 预测与情景分析模块 - 完全对齐伪代码版本
 对应伪代码 §6-8：基线预测、情景分析、导出图表
 
-完整实现（不简化）：
+
 §6: 基线预测
   6.1 外生变量外推（5种规则：RW、RW-drift、mean-revert、hold_last、AR(1)）
   6.2 递推ECM预测（完整误差修正项、滞后项、置信区间）
@@ -61,7 +61,6 @@ logger = logging.getLogger(__name__)
 class ExogProjector:
     """
     外生变量外推器
-    对应伪代码 §6.1: project_exogenous_base
     
     支持5种规则：
     1. rw: 随机游走（维持最后值 + 白噪声）
@@ -135,12 +134,12 @@ class ExogProjector:
                 # 均值回归（AR(1)过程）
                 hist_mean = hist_values.mean()
                 
-                # 估计AR(1)系数（简化：使用自相关）
+                # 估计AR(1)系数
                 if len(hist_values) >= 24:
                     rho = hist_values.autocorr(lag=1)
-                    rho = np.clip(rho, 0.5, 0.99)  # 限制在合理范围
+                    rho = np.clip(rho, 0.5, 0.99)  
                 else:
-                    rho = 0.8  # 默认值
+                    rho = 0.8  
                 
                 # 递推：x_{t+1} = μ + ρ(x_t - μ) + ε
                 path = []
@@ -212,7 +211,6 @@ class ExogProjector:
 class ECMSimulator:
     """
     ECM递推模拟器
-    对应伪代码 §6.2: simulate_ECM
     
     完整实现误差修正模型的递推预测：
     Δy_t = α + β_1*ECT_{t-1} + Σγ_i*Δy_{t-i} + Σδ_j*ΔX_{t-j} + ε_t
@@ -252,7 +250,6 @@ class ECMSimulator:
                 n_sim: int = 1000) -> pd.DataFrame:
         """
         递推模拟ECM预测（使用ARDL模型和外生变量）
-        对应伪代码 §6.2: simulate_ECM
         
         完整实现ECM递推：
         Δy_t = α + β_1*ECT_{t-1} + Σγ_i*Δy_{t-i} + Σδ_j*ΔX_{t-j} + ε_t
@@ -293,7 +290,7 @@ class ECMSimulator:
             forecasts = self.model.predict(
                 start=len(y_hist),
                 end=len(y_hist) + horizon - 1,
-                exog_oos=X_exog,  # 使用exog_oos而不是exog
+                exog_oos=X_exog, 
                 dynamic=True
             )
             
@@ -314,13 +311,13 @@ class ECMSimulator:
         
         forecasts = np.array(forecasts)
         
-        # 置信区间（改进版：考虑长期预测的合理性）
+        # 置信区间
         if ci:
-            # 方法：使用逐步递增的标准误，但限制最大值避免过宽
+            # 使用逐步递增的标准误，但限制最大值避免过宽
             # SE(h) = sigma * sqrt(h)，但对于长期预测，使用饱和函数
             h_values = np.arange(1, horizon + 1)
             
-            # 改进1: 使用饱和函数限制SE增长
+            # 使用饱和函数限制SE增长
             # SE增长在前12个月快速，之后趋于平缓
             se_mult = np.sqrt(h_values)
             # 对于h > 12的情况，使用对数增长而非平方根增长
@@ -329,7 +326,7 @@ class ECMSimulator:
             
             z_score = 1.96 if ci_level == 0.95 else 2.576  # 95% or 99%
             
-            # 改进2: 限制最大SE为合理范围（对数尺度上不超过±2.0）
+            # 限制最大SE为合理范围（对数尺度上不超过±2.0）
             # 这样转回原始规模后，上限约为预测值的7.4倍，下限约为预测值的13.5%
             max_se_mult = 2.0 / (z_score * self.sigma)
             se_mult = np.minimum(se_mult, max_se_mult)
@@ -503,7 +500,7 @@ class ShareForecaster:
         total_lower = S_USD_fc['level_lower'] + S_nonUSD_fc['level_lower']
         total_upper = S_USD_fc['level_upper'] + S_nonUSD_fc['level_upper']
         
-        share_lower = S_USD_fc['level_lower'] / total_upper  # 保守估计
+        share_lower = S_USD_fc['level_lower'] / total_upper  
         share_upper = S_USD_fc['level_upper'] / total_lower
         
         return pd.DataFrame({
@@ -537,7 +534,7 @@ class ShareForecaster:
             })
         
         try:
-            # 第一阶段预测（简化：使用工具变量均值）
+            # 第一阶段预测
             # 实际应用stage1模型
             dlog_S_nonUSD_hat = np.zeros(len(X_future))
             
@@ -618,7 +615,7 @@ class PanelCountForecaster:
             # 准备预测数据 - 确保包含所有需要的变量且顺序一致
             X_pred = panel_future[[v for v in exog_vars if not v.startswith('anchor_')]].copy()
             
-            # ===== 添加Anchor固定效应哑变量 =====
+            # ===== Anchor固定效应哑变量 =====
             # 创建与训练时相同的anchor哑变量
             if any(v.startswith('anchor_') for v in exog_vars):
                 logger.info(f"  检测到{sum(1 for v in exog_vars if v.startswith('anchor_'))}个anchor哑变量，正在创建...")
@@ -681,7 +678,6 @@ def forecast_baseline(models: dict, month: pd.DataFrame,
                      panel: pd.DataFrame, cfg: dict) -> dict:
     """
     基线预测主函数
-    对应伪代码 §6: forecast_baseline
     
     包含：
     6.1 外生变量外推
@@ -766,7 +762,7 @@ def forecast_baseline(models: dict, month: pd.DataFrame,
     logger.info("-" * 60)
     
     if 'counts' in models:
-        # 将S_nonUSD预测合并到X_future（关键步骤！）
+        # 将S_nonUSD预测合并到X_future
         if 'S_nonUSD' in results:
             X_future_with_S = X_future.copy()
             # 提取log_S_nonUSD预测值（列名是'forecast'）
@@ -805,7 +801,6 @@ def build_future_panel_exog(panel: pd.DataFrame, month: pd.DataFrame,
                             pol_shift_progressive: dict = None) -> pd.DataFrame:
     """
     构造未来期的面板外生变量
-    对应伪代码 §6.4: build_future_panel_exog
     
     参数:
         pol_shift_progressive: 渐进式政策冲击字典 {month_end: shift_value}
@@ -825,7 +820,7 @@ def build_future_panel_exog(panel: pd.DataFrame, month: pd.DataFrame,
         else:
             anchor_sigma_mean[anchor] = 0
     
-    # 计算各anchor的汇率变化率历史均值（关键变量！）
+    # 计算各anchor的汇率变化率历史均值
     anchor_fx_mean = {}
     for anchor in unique_anchors:
         anchor_hist = panel[panel['anchor'] == anchor]
@@ -863,7 +858,7 @@ def build_future_panel_exog(panel: pd.DataFrame, month: pd.DataFrame,
                     else:
                         base_pol = 0.0
                 
-                # ===== 渐进式政策释放（关键修改）=====
+                # ===== 渐进式政策释放 =====
                 # 如果提供了渐进式冲击路径，叠加到基础值上
                 if pol_shift_progressive is not None and month_end in pol_shift_progressive:
                     record['Pol_anchor_l1'] = base_pol + pol_shift_progressive[month_end]
@@ -877,7 +872,7 @@ def build_future_panel_exog(panel: pd.DataFrame, month: pd.DataFrame,
                 if 'tail1_l1' in anchor_hist.columns:
                     record['tail1_l1'] = anchor_hist['tail1_l1'].iloc[-1]
                 
-                # dlog_usd_per_anchor: 使用最近5期均值（关键新增！）
+                # dlog_usd_per_anchor: 使用最近5期均值
                 record['dlog_usd_per_anchor'] = anchor_fx_mean.get(anchor, 0)
             
             future_records.append(record)
@@ -893,7 +888,6 @@ def run_scenarios(models: dict, month: pd.DataFrame,
                  panel: pd.DataFrame, cfg: dict) -> dict:
     """
     运行三类情景
-    对应伪代码 §7: run_scenarios
     
     S0 Base: 基线
     S1 ProNonUSD: 友好监管（Pol_nonUSD +0.5, sigma_offpeg -15%）
@@ -1034,7 +1028,7 @@ def run_scenarios(models: dict, month: pd.DataFrame,
         
         # 面板计数
         if 'counts' in models:
-            # 将S_nonUSD预测合并到X_scenario（关键步骤！）
+            # 将S_nonUSD预测合并到X_scenario
             if 'S_nonUSD' in scenario_results:
                 X_scenario_with_S = X_scenario.copy()
                 # 提取log_S_nonUSD预测值（列名是'forecast'）
@@ -1315,7 +1309,7 @@ def plot_share_chart(fcst_base: dict, scenarios: dict,
     ax1.legend(loc='best', fontsize=11)
     ax1.grid(True, alpha=0.3)
     
-    # === 下图: 相对于基线的百分点差异 ===
+    # === 相对于基线的百分点差异 ===
     if 'share_levels' in fcst_base:
         base_share = df_base['share_USD'].values
         
@@ -1336,10 +1330,10 @@ def plot_share_chart(fcst_base: dict, scenarios: dict,
         ax2.set_xlabel('Date', fontsize=12, fontweight='bold')
         ax2.set_ylabel('Share Difference (percentage points)', fontsize=12, fontweight='bold')
         ax2.set_title('USD Share Change Relative to Baseline', fontsize=13, fontweight='bold')
-        ax2.legend(loc='lower left', fontsize=11)  # 图例移到左下角
+        ax2.legend(loc='lower left', fontsize=11)  
         ax2.grid(True, alpha=0.3)
         
-        # 添加注释框 - 放在左下角，图例下方
+        
         ax2.text(0.02, 0.25, 
                 'Negative = USD share declines (non-USD grows)\nPositive = USD share increases (non-USD shrinks)',
                 transform=ax2.transAxes, fontsize=9, 

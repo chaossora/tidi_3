@@ -71,7 +71,7 @@ class AnchorPanelBuilder:
         
         return {
             'panel': self.panel,
-            'month': self.month,  # 更新后的月表（含N_nonUSD）
+            'month': self.month, 
             'N_nonUSD': N_nonUSD
         }
     
@@ -183,7 +183,7 @@ class AnchorPanelBuilder:
             self.panel['Pol_anchor'] = 0
             self.panel['cum_events'] = 0
             self.panel['policy_stage'] = 0
-            self.panel['ban_dummy'] = 0  # 新增
+            self.panel['ban_dummy'] = 0  
             self.panel['any_impulse'] = 0
             return
         
@@ -191,7 +191,7 @@ class AnchorPanelBuilder:
         pol_list = []
         cum_events_list = []
         policy_stage_list = []
-        ban_dummy_list = []  # 新增
+        ban_dummy_list = []  
         any_impulse_list = []
         
         for idx, row in self.panel.iterrows():
@@ -205,7 +205,7 @@ class AnchorPanelBuilder:
                 pol_list.append(0)
                 cum_events_list.append(0)
                 policy_stage_list.append(0)
-                ban_dummy_list.append(0)  # 新增
+                ban_dummy_list.append(0)  
                 any_impulse_list.append(0)
                 continue
             
@@ -213,11 +213,11 @@ class AnchorPanelBuilder:
             pol_vals = []
             cum_vals = []
             stage_vals = []
-            ban_vals = []  # 新增：禁令指标
+            ban_vals = []  
             impulse_vals = []
             
             for juris in jurisdictions:
-                # 使用年-月匹配（忽略具体日期）
+                # 使用年-月匹配
                 mask = ((policy_df['jurisdiction'] == juris) & 
                        (policy_df['month_end'].dt.year == month_end.year) &
                        (policy_df['month_end'].dt.month == month_end.month))
@@ -229,15 +229,13 @@ class AnchorPanelBuilder:
                         policy_stage = pol_row.get('policy_stage', 0)
                         ban_dummy = pol_row.get('ban_dummy', 0)
                         
-                        # ✅ 关键修改：区分正面和负面政策
-                        # Pol_anchor = 净政策友好度 (policy_stage - ban_dummy)
-                        # 范围: -1 (纯禁令) 到 3 (生效且无禁令)
+                        
                         net_policy = policy_stage - ban_dummy
                         
                         pol_vals.append(net_policy)  # 主要政策指标使用净值
-                        cum_vals.append(pol_row.get('cum_events', 0))  # 保留原始累计事件
-                        stage_vals.append(policy_stage)  # 保留正面政策阶段
-                        ban_vals.append(ban_dummy)  # 新增：禁令指标
+                        cum_vals.append(pol_row.get('cum_events', 0))  
+                        stage_vals.append(policy_stage)  
+                        ban_vals.append(ban_dummy)  
                         impulse_vals.append(pol_row.get('any_impulse', 0))
                     else:
                         # 使用原有政策强度
@@ -251,19 +249,19 @@ class AnchorPanelBuilder:
                         ban_vals.append(0)
                         impulse_vals.append(0)
             
-            # 取平均（如果有多个jurisdiction）
+            # 取平均
             pol_list.append(np.mean(pol_vals) if pol_vals else 0)
             cum_events_list.append(np.mean(cum_vals) if cum_vals else 0)
             policy_stage_list.append(np.mean(stage_vals) if stage_vals else 0)
-            ban_dummy_list.append(np.max(ban_vals) if ban_vals else 0)  # 禁令用max（只要有一个禁令就算）
+            ban_dummy_list.append(np.max(ban_vals) if ban_vals else 0)  # 禁令用max
             any_impulse_list.append(np.max(impulse_vals) if impulse_vals else 0)  # 脉冲事件用max
         
         # 保存到面板
-        self.panel['Pol_anchor'] = pol_list  # 现在是净政策友好度 (policy_stage - ban_dummy)
+        self.panel['Pol_anchor'] = pol_list  
         if use_enhanced:
             self.panel['cum_events'] = cum_events_list
             self.panel['policy_stage'] = policy_stage_list
-            self.panel['ban_dummy'] = ban_dummy_list  # 新增：禁令指标
+            self.panel['ban_dummy'] = ban_dummy_list  
             self.panel['any_impulse'] = any_impulse_list
             logger.info(f"  [OK] 增强政策指数已映射（区分正负面政策）")
             logger.info(f"     Pol_anchor（净政策友好度=stage-ban）均值: {np.mean(pol_list):.3f}, 范围: [{np.min(pol_list):.1f}, {np.max(pol_list):.1f}]")
@@ -282,7 +280,7 @@ class AnchorPanelBuilder:
         
         # 如果使用增强政策数据，添加新变量
         if 'cum_events' in self.panel.columns:
-            lag_vars.extend(['cum_events', 'policy_stage', 'ban_dummy'])  # 新增 ban_dummy
+            lag_vars.extend(['cum_events', 'policy_stage', 'ban_dummy']) 
             # any_impulse不需要滞后（脉冲事件）
         
         for var in lag_vars:
